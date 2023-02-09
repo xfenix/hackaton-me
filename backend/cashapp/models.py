@@ -18,6 +18,9 @@ class Organization(DateHistoryModel):
     name: models.TextField = models.TextField(verbose_name=_("Organization name"))
     description: models.TextField = models.TextField(verbose_name=_("Organization description"))
 
+    def __str__(self) -> str:
+        return self.name
+
 
 class Event(DateHistoryModel):
     description: models.TextField = models.TextField(verbose_name=_("Event description"))
@@ -29,12 +32,18 @@ class Event(DateHistoryModel):
         'Organization', verbose_name=_('Organization'), on_delete=models.CASCADE
     )
 
+    def __str__(self) -> str:
+        return self.name
+
 
 class EventQRCode(DateHistoryModel):
     alias: models.TextField = models.TextField(verbose_name=_("QR Code alias"))
     description: models.TextField = models.TextField(verbose_name=_("QR Code description"))
     price: models.TextField = models.TextField(verbose_name=_("Event price"))
     event: models.ForeignKey = models.ForeignKey('Event', verbose_name=_('Event'), on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.alias
 
 
 class Order(DateHistoryModel):
@@ -45,4 +54,5 @@ class Order(DateHistoryModel):
     status: models.TextField = models.TextField(verbose_name=_("Order status"))
     event: models.ForeignKey = models.ForeignKey('Event', verbose_name=_('Event'), on_delete=models.CASCADE)
 
-
+    def __str__(self) -> str:
+        return f'Order #{self.id}'
