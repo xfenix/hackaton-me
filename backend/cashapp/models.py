@@ -15,6 +15,7 @@ class DateHistoryModel(models.Model):
 class Organization(DateHistoryModel):
     name: models.TextField = models.TextField(verbose_name=_("Organization name"))
     description: models.TextField = models.TextField(verbose_name=_("Organization description"))
+    merchant_id: models.TextField = models.TextField(verbose_name=_("Merchant id"))
 
     def __str__(self) -> str:
         return self.name
@@ -35,13 +36,20 @@ class Event(DateHistoryModel):
 
 
 class EventQRCode(DateHistoryModel):
-    alias: models.TextField = models.TextField(verbose_name=_("QR Code alias"))
+    alias: models.TextField = models.TextField(verbose_name=_("QR Code alias"), unique=True)
     description: models.TextField = models.TextField(verbose_name=_("QR Code description"))
     price: models.TextField = models.TextField(verbose_name=_("Event price"))
     event: models.ForeignKey = models.ForeignKey('Event', verbose_name=_('Event'), on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.alias
+
+
+class SBPQRCode(DateHistoryModel):
+    qr_id: models.TextField = models.TextField(verbose_name=_("QR ID"))
+    qr_status: models.TextField = models.TextField(verbose_name="QR Status")
+    qr_url: models.TextField = models.TextField(verbose_name=_("QR URL"))
+    order: models.ForeignKey = models.ForeignKey('Order', verbose_name=_("Order"))
 
 
 class Order(DateHistoryModel):
@@ -51,6 +59,7 @@ class Order(DateHistoryModel):
     merchant_reply: models.TextField = models.TextField(verbose_name=_("Merchant reply"))
     status: models.TextField = models.TextField(verbose_name=_("Order status"))
     event: models.ForeignKey = models.ForeignKey('Event', verbose_name=_('Event'), on_delete=models.CASCADE)
+    uuid: models.UUIDField(default=uuid.uuid1, editable=False)
 
     def __str__(self) -> str:
         return f'Order #{self.id}'
