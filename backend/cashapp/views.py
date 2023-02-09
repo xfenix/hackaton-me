@@ -2,6 +2,7 @@ import asyncio
 
 from django.http import (
     HttpRequest,
+    HttpResponse,
     HttpResponseBadRequest,
     HttpResponseNotFound,
     HttpResponseServerError,
@@ -63,9 +64,7 @@ class MakeOrderView(ViewBase):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class MakeQr(View):
-
     def get(self, request: HttpRequest, alias: str) -> HttpResponse | HttpResponseNotFound:
-
         event: models.EventQRCode | None = models.EventQRCode.objects.filter(alias=alias).first()
         if not event:
             return HttpResponseNotFound('Event not found')
