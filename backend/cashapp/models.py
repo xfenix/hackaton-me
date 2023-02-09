@@ -53,7 +53,7 @@ class Order(DateHistoryModel):
     tickets_count: models.TextField = models.TextField(verbose_name=_("Ticket count"))
     merchant_reply: models.TextField = models.TextField(verbose_name=_("Merchant reply"), default='')
     status: models.TextField = models.TextField(verbose_name=_("Order status"), default='')
-    uuid: models.UUIDField(default=uuid.uuid1, editable=False)
+    uuid: models.UUIDField = models.UUIDField(default=uuid.uuid1, editable=False)
     qr_id: models.TextField = models.TextField(verbose_name=_("QR ID"), default='')
     qr_status: models.TextField = models.TextField(verbose_name="QR Status", default='')
     qr_url: models.TextField = models.TextField(verbose_name=_("QR URL"), default='')
