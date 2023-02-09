@@ -1,0 +1,19 @@
+# Generic things
+*.pyc
+*~
+__pycache__/*
+*.swp
+*.sqlite3
+*.map
+.vscode
+.idea
+.DS_Store
+.env
+.mypy_cache
+.pytest_cache
+.coverage
+docker-compose.yml
+htmlcov/
+
+# VSCode
+chatbot-back.code-workspace
