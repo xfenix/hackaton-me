@@ -83,4 +83,4 @@ class FetchEventView(View):
             logo=event.logo,
             background=event.background,
         )
-        return JsonResponse(**event_info)
+        return JsonResponse(dict(event_info))
