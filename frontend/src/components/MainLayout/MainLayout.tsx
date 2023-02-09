@@ -35,6 +35,10 @@ const GlobalStyle = createGlobalStyle<{ background: string }>`
     color: ${settings.COLOR_BLACK};
   }
 
+  button {
+    font-family: ${settings.DEFAULT_FONT_NAME};
+  }
+
   h3 {
     font-size: 20px;
     margin-bottom: 14px;

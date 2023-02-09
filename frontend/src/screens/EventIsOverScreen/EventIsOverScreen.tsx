@@ -4,7 +4,7 @@ export const EventIsOverScreen = () => {
   return (
     <MainLayout>
       <h1>Мероприятие закончилось :(</h1>
-      <img src={"over.svg"} />
+      <img src={"/public/over.svg"} />
     </MainLayout>
   );
 };

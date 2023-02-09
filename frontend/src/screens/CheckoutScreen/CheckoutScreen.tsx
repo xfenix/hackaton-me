@@ -2,6 +2,7 @@ import { MainLayout } from "../../components/MainLayout";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import * as settings from "../../common/settings";
+import { formatPrice } from "../../common/helpers";
 import { useParams } from "react-router-dom";
 
 const TYPICAL_PADDING = 20;
@@ -20,7 +21,7 @@ export const FormWrapper = styled.form`
     background: #ffffff;
     border: 1px solid ${settings.COLOR_VERY_LIGHT_GRAY};
     border-radius: 8px;
-    padding: 14px ${TYPICAL_PADDING}px;
+    padding: 18px ${TYPICAL_PADDING}px;
     box-sizing: border-box;
     outline: none;
   }
@@ -48,13 +49,20 @@ export const SubmitButton = styled.button`
   margin-top: 32px;
   background: ${settings.COLOR_BRAND};
   border-radius: 8px;
-  padding: 14px ${TYPICAL_PADDING}px;
+  padding: 18px ${TYPICAL_PADDING}px;
   display: flex;
   align-items: center;
   border: 1px solid ${settings.COLOR_VERY_LIGHT_GRAY};
   transition: background-color 0.4s ease;
   width: 100%;
   box-sizing: border-box;
+  cursor: pointer;
+
+  & > span {
+    flex-grow: 3;
+    text-align: left;
+    margin-left: 12px;
+  }
 
   &:active {
     position: relative;
@@ -120,7 +128,7 @@ export const CheckoutScreen = () => {
             />
           </svg>
           <span>Оплатить</span>
-          <strong>1 585 ₽</strong>
+          <strong>{formatPrice(1585)} ₽</strong>
         </SubmitButton>
       </FormWrapper>
     </MainLayout>
