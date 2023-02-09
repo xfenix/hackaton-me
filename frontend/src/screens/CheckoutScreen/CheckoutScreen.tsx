@@ -139,7 +139,13 @@ export const CheckoutScreen = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      amount: "1",
+      email: "",
+      phone: "",
+    },
+  });
   const onSubmit = (data: any) => console.log(data);
   React.useEffect(() => {
     // fetch data from server via fetch api
@@ -169,15 +175,10 @@ export const CheckoutScreen = () => {
                 key={oneValue}
               >
                 <span>{oneValue}</span>
-                <input
-                  type="radio"
-                  value={oneValue}
-                  defaultChecked={currentTicketCount === 1 ? true : false}
-                  name="ticket-count"
-                />
+                <input type="radio" value={oneValue} {...register("amount")} />
               </TicketRadio>
             ))}
-            <input type="number" placeholder="8" name="tickets-manual-count" />
+            <input type="number" placeholder="8" {...register("amount")} />
           </div>
         </FormTicketsCountRow>
         <FormRow>
