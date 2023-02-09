@@ -126,6 +126,13 @@ export const TicketRadio = styled.label`
 
 export const CheckoutScreen = () => {
   const [currentTicketCount, setCurrentTicketCount] = React.useState(1);
+  const [serverState, setServerData] = React.useState<{
+    name: string;
+    date: string;
+    price: number;
+    logo: string;
+    background: string;
+  }>({ name: "", date: "", price: 1000, logo: "ontico", background: "party2" });
   let { alias } = useParams();
   const {
     register,
@@ -134,9 +141,17 @@ export const CheckoutScreen = () => {
     formState: { errors },
   } = useForm();
   const onSubmit = (data: any) => console.log(data);
+  React.useEffect(() => {
+    // fetch data from server via fetch api
+    fetch(`${settings.BACK_API_ROOT}/fetch-event-info/${alias}/`)
+      .then((response) => response.json())
+      .then((data) => {
+        setServerData(data);
+      });
+  });
 
   return (
-    <MainLayout logo="ontico" background="party1">
+    <MainLayout logo={serverState.logo} background={serverState.background}>
       <h3>Конференция HighLoad</h3>
       <p>
         Крупнейшая профессиональная конференция для разработчиков
@@ -202,7 +217,9 @@ export const CheckoutScreen = () => {
             />
           </svg>
           <span>Оплатить</span>
-          <strong>{formatPrice(1585)} ₽</strong>
+          <strong>
+            {formatPrice(serverState.price * currentTicketCount)} ₽
+          </strong>
         </SubmitButton>
       </FormWrapper>
     </MainLayout>
