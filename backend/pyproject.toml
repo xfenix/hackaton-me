@@ -1,0 +1,51 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = "Backend for self-service event cash machine"
+authors = []
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "*"
+psycopg2 = "*"
+django-jet = "*"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+isort = "*"
+mypy = "*"
+
+[tool.black]
+line-length = 120
+target-version = ['py311']
+include = '\.pyi?$'
+skip-string-normalization = true
+exclude = '''
+(
+  /(
+    | \.git
+    | \.mypy_cache
+  )/
+)
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 120
+sections = ['FUTURE', 'STDLIB', 'THIRDPARTY', 'FIRSTPARTY', 'LOCALFOLDER']
+no_lines_before = ['STDLIB', 'LOCALFOLDER']
+force_to_top = []
+known_third_party = [
+  'dal',
+  'django',
+  'rangefilter',
+]
+multi_line_output = 3
+lines_after_imports = 2
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
