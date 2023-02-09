@@ -125,23 +125,29 @@ export const TicketRadio = styled.label`
 `;
 
 export const CheckoutScreen = () => {
-  const [currentTicketCount, setCurrentTicketCount] = React.useState(1);
   const [serverState, setServerData] = React.useState<{
     name: string;
-    date: string;
+    description: string;
     price: number;
     logo: string;
     background: string;
-  }>({ name: "", date: "", price: 1000, logo: "ontico", background: "party2" });
+  }>({
+    name: "",
+    description: "",
+    price: 1000,
+    logo: "ontico",
+    background: "party2",
+  });
   let { alias } = useParams();
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
+    getValues,
   } = useForm({
     defaultValues: {
-      amount: "1",
+      amount: 1,
       email: "",
       phone: "",
     },
@@ -158,27 +164,25 @@ export const CheckoutScreen = () => {
 
   return (
     <MainLayout logo={serverState.logo} background={serverState.background}>
-      <h3>Конференция HighLoad</h3>
-      <p>
-        Крупнейшая профессиональная конференция для разработчиков
-        высоконагруженных систем и их мамок, хахахаа будет гачи
-      </p>
+      <h3>{serverState.name}</h3>
+      <p>{serverState.description}</p>
       <FormWrapper action="" onSubmit={handleSubmit(onSubmit)}>
         <FormTicketsCountRow>
           <span className="small-text">Количество билетов:</span>
           <div>
             {RADIO_VALUES.map((oneValue) => (
-              <TicketRadio
-                onClick={(event: any) =>
-                  setCurrentTicketCount(event.target.value)
-                }
-                key={oneValue}
-              >
+              <TicketRadio key={oneValue}>
                 <span>{oneValue}</span>
                 <input type="radio" value={oneValue} {...register("amount")} />
               </TicketRadio>
             ))}
-            <input type="number" placeholder="8" {...register("amount")} />
+            <input
+              type="number"
+              min={7}
+              max={30}
+              placeholder="8"
+              {...register("amount")}
+            />
           </div>
         </FormTicketsCountRow>
         <FormRow>
@@ -218,9 +222,7 @@ export const CheckoutScreen = () => {
             />
           </svg>
           <span>Оплатить</span>
-          <strong>
-            {formatPrice(serverState.price * currentTicketCount)} ₽
-          </strong>
+          <strong>{formatPrice(serverState.price * watch("amount"))} ₽</strong>
         </SubmitButton>
       </FormWrapper>
     </MainLayout>
