@@ -99,3 +99,10 @@ class FetchEventView(View):
             background=event.background,
         )
         return JsonResponse(event_info.dict())
+
+@method_decorator(csrf_exempt, name='dispatch')
+class SBPCallbackPayView(View):
+    def post(
+        self, request: HttpRequest
+    ) -> JsonResponse | HttpResponseNotFound | HttpResponseBadRequest | HttpResponseServerError:
+        return HttpResponse("Message received okay.")
