@@ -28,3 +28,6 @@ HELP.md
 
 ### VS Code ###
 .vscode/
+*.pyc
+.python-version
+my_project/db.sqlite3
