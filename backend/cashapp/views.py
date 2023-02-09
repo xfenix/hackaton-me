@@ -38,17 +38,11 @@ class MakeOrderView(View):
 @method_decorator(csrf_exempt, name='dispatch')
 class MakeQr(View):
 
-    @classonlymethod
-    def as_view(cls, **initkwargs):
-        view = super().as_view(**initkwargs)
-        view._is_coroutine = asyncio.coroutines._is_coroutine
-        return view
+    def get(self, request: HttpRequest, alias: str) -> HttpResponse | HttpResponseNotFound:
 
-    async def get(self, request: HttpRequest, event_id: str) -> JsonResponse | HttpResponseNotFound:
-
-        event: models.Event | None = models.Event.objects.filter(id=event_id).first()
+        event: models.EventQRCode | None = models.EventQRCode.objects.filter(alias=alias).first()
         if not event:
-            raise HttpResponseNotFound('Event not found')
+            return HttpResponseNotFound('Event not found')
 
-        new_qr: str = barcodes.qr_instance.generate(event_id)
-        return JsonResponse({'qr_code': new_qr})
+        new_qr: str = barcodes.qr_instance.generate(alias)
+        return HttpResponse(new_qr, headers={'Content-Type': 'image/svg+xml'})

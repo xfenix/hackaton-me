@@ -1,0 +1,10 @@
+{% extends 'admin/change_form.html' %} //!!!
+{% load i18n admin_urls %}
+
+
+{% block object-tools-items %}
+<li class="toolbar-left-button">
+    <a href="/api/make-qr/{{ original.alias }}/" class="import-dialog-show chb-onpage-action-button" target="blank">{% trans "Create QR" %}</a>
+</li>
+{{ block.super }}
+{% endblock %}
