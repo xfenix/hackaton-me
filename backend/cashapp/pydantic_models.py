@@ -32,7 +32,7 @@ class EventInfoResponsePayload(pydantic.BaseModel):
     background: str
 
 
-class RaifQRCodeRequest(pydantic.BaseModel):
+class RaifQRCodeRequestPayload(pydantic.BaseModel):
     qrType: str
     amount: int
     currency: str | None = None

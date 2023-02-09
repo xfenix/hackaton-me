@@ -1,14 +1,14 @@
 import httpx
 from django.conf import settings
 
-from cashapp import models, pydantic_models
+from cashapp import pydantic_models
 
 
 class RaifSBPClient:
     @staticmethod
     async def send_payment(self, payment: pydantic_models.Payment) -> None:
         redirect_url: str = f'{settings.URL_BASE}/{payment.order}'
-        qr_code_request: pydantic_models.RaifQRCodeRequest = pydantic_models.RaifQRCodeRequest(
+        qr_code_request: pydantic_models.RaifQRCodeRequestPayload = pydantic_models.RaifQRCodeRequestPayload(
             qrType=settings.QR_TYPE,
             amount=payment.amount,
             currency=settings.CURRENCY,
