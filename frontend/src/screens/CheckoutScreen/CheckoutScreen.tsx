@@ -173,7 +173,11 @@ export const CheckoutScreen = () => {
             {RADIO_VALUES.map((oneValue) => (
               <TicketRadio key={oneValue}>
                 <span>{oneValue}</span>
-                <input type="radio" value={oneValue} {...register("amount")} />
+                <input
+                  type="radio"
+                  value={oneValue}
+                  {...register("amount", { valueAsNumber: true })}
+                />
               </TicketRadio>
             ))}
             <input
@@ -181,7 +185,7 @@ export const CheckoutScreen = () => {
               min={7}
               max={30}
               placeholder="8"
-              {...register("amount")}
+              {...register("amount", { valueAsNumber: true })}
             />
           </div>
         </FormTicketsCountRow>
