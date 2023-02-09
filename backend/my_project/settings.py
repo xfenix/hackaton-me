@@ -128,5 +128,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 APP_URL_BASE: str = envparse('APP_URL', 'https://self-service-checkout-events.5723.raiff2023.codenrock.com').rstrip("/")
 REDIRECT_URL: str = envparse('PAYMENT_REDIRECT_URL', 'order', cast=str).strip('/')
 QR_GENERATION_URL: str = envparse('RAIFFEISEN_SBP_URL', 'https://pay-test.raif.ru/api/sbp/v2/qrs', cast=str).rstrip("/")
-QR_CODE_BOX_SIZE: int = envparse.env("QR_CODE_BOX_SIZE", default=40, cast=int)
+QR_CODE_BOX_SIZE: int = envparse("QR_CODE_BOX_SIZE", default=40, cast=int)
 QR_TYPE: str = envparse('QR_CODE_TYPE', 'QRDynamic', cast=str)
