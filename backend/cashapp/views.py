@@ -8,14 +8,14 @@ from django.http import (
     HttpResponseServerError,
     JsonResponse,
 )
-
+from django.shortcuts import redirect
 from django.utils.decorators import classonlymethod, method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
 from cashapp import models, pydantic_models
-from cashapp.services import barcodes
 from cashapp.clients import sbp
+from cashapp.services import barcodes
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -51,9 +51,14 @@ class MakeOrderView(View):
             merchant_id=event_code.event.organization.merchant_id,
         )
 
-        sbp.RaifSBPClient.send_payment(payment)
+        payment_qr_code: pydantic_models.SBPQRCode = await sbp.RaifSBPClient.send_payment(payment)
 
-        return HttpResponse('Order was made')
+        new_sbp_qr_code: models.SBPQRCode = models.SBPQRCode(
+            qr_id=payment_qr_code.qrId, qr_status=payment_qr_code.qrStatus, qr_url=payment_qr_url.qrUrl, order=new_order
+        )
+        new_sbp_qr_code.save()
+
+        return redirect(new_sbp_qr_code.qr_url)
 
 
 @method_decorator(csrf_exempt, name='dispatch')

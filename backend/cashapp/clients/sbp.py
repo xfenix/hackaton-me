@@ -1,12 +1,13 @@
-from cashapp import models, pydantic_models
-
 import httpx
+from django.conf import settings
+
+from cashapp import models, pydantic_models
 
 
 class RaifSBPClient:
-    @staticethod
+    @staticmethod
     async def send_payment(self, payment: Payment) -> None:
-        redirect_url: str = f'{settings.REDIRECT_URL_BASE}/{payment.order}'
+        redirect_url: str = f'{settings.URL_BASE}/{payment.order}'
         qr_code_request: pydantic_models.RaifQRCodeRequest = pydantic_models.RaifQRCodeRequest(
             qrType=settings.qrType,
             amount=payment.amount,
@@ -16,9 +17,6 @@ class RaifSBPClient:
             redirectUrl=redirect_url,
         )
 
-        sbp_qr_code: SBPQRCode
         async with httpx.AsyncClient() as client:
-            result: httpx.Response = await client.get(settings.QR_GENERATION_URL, qr_code_request.json())
-            sbp_qr_code = SBPQRCode(**result.json())
-
-        pass
+            result: httpx.Response = await client.post(settings.QR_GENERATION_URL, qr_code_request.json())
+            return SBPQRCode(**result.json())
