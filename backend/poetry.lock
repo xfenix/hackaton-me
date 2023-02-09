@@ -115,7 +115,7 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
-category = "dev"
+category = "main"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
 files = [
@@ -145,16 +145,18 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
-name = "envcast"
-version = "1.2.0"
-description = "This module helps to cast environment variables to desired types. It may be very useful for 12factor app usage."
+name = "envparse"
+version = "0.2.0"
+description = "Simple environment variable parsing"
 category = "main"
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = "*"
 files = [
-    {file = "envcast-1.2.0-py3-none-any.whl", hash = "sha256:db52c9448da0fc4f88967911763a471e55708373793d4fcce1124609a9f124bd"},
-    {file = "envcast-1.2.0.tar.gz", hash = "sha256:bbd4342af70fab3c3c652e52ce3dd5055d563338352f8816b14ef52d601b8e0a"},
+    {file = "envparse-0.2.0.tar.gz", hash = "sha256:4f3b9a27bb55d27f124eb4adf006fec05e4588891c9a054a183a112645056eb7"},
 ]
+
+[package.extras]
+testing = ["pytest"]
 
 [[package]]
 name = "h11"
@@ -419,6 +421,42 @@ dotenv = ["python-dotenv (>=0.10.4)"]
 email = ["email-validator (>=1.0.3)"]
 
 [[package]]
+name = "pypng"
+version = "0.20220715.0"
+description = "Pure Python library for saving and loading PNG images"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pypng-0.20220715.0-py3-none-any.whl", hash = "sha256:4a43e969b8f5aaafb2a415536c1a8ec7e341cd6a3f957fd5b5f32a4cfeed902c"},
+    {file = "pypng-0.20220715.0.tar.gz", hash = "sha256:739c433ba96f078315de54c0db975aee537cbc3e1d0ae4ed9aab0ca1e427e2c1"},
+]
+
+[[package]]
+name = "qrcode"
+version = "7.4.2"
+description = "QR Code image generator"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "qrcode-7.4.2-py3-none-any.whl", hash = "sha256:581dca7a029bcb2deef5d01068e39093e80ef00b4a61098a2182eac59d01643a"},
+    {file = "qrcode-7.4.2.tar.gz", hash = "sha256:9dd969454827e127dbd93696b20747239e6d540e082937c90f14ac95b30f5845"},
+]
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+pypng = "*"
+typing-extensions = "*"
+
+[package.extras]
+all = ["pillow (>=9.1.0)", "pytest", "pytest-cov", "tox", "zest.releaser[recommended]"]
+dev = ["pytest", "pytest-cov", "tox"]
+maintainer = ["zest.releaser[recommended]"]
+pil = ["pillow (>=9.1.0)"]
+test = ["coverage", "pytest"]
+
+[[package]]
 name = "rfc3986"
 version = "1.5.0"
 description = "Validating URI References per RFC 3986"
@@ -487,4 +525,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "a618c76f6a4042816a2fb138548f7cc4998c58d58557a108835adb403ef9ee03"
+content-hash = "df0dd7d36c15d5061067448dd004187c814d0a4b95c413f71caa106955c92f74"
