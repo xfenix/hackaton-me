@@ -4,8 +4,10 @@ import styled from "styled-components";
 import * as settings from "../../common/settings";
 import { formatPrice } from "../../common/helpers";
 import { useParams } from "react-router-dom";
+import React from "react";
 
 const TYPICAL_PADDING = 20;
+const RADIO_VALUES = [1, 2, 3, 4, 5, 6];
 export const FormWrapper = styled.form`
   margin-top: 32px;
 
@@ -45,6 +47,19 @@ export const FormSeparator = styled.div`
     width: 100%;
   }
 `;
+export const FormTicketsCountRow = styled.div`
+  padding: 0 ${TYPICAL_PADDING}px;
+  margin-bottom: 24px;
+
+  & > span {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  & > div {
+    display: flex;
+  }
+`;
 export const SubmitButton = styled.button`
   margin-top: 32px;
   background: ${settings.COLOR_BRAND};
@@ -73,8 +88,36 @@ export const SubmitButton = styled.button`
     background: #fed500;
   }
 `;
+export const TicketRadio = styled.label`
+  font-size: 26px;
+  line-height: 32px;
+  width: 48px;
+  height: 48px;
+  font-weight: normal;
+  border-radius: 100% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: ${settings.COLOR_BRAND};
+  }
+
+  & > span {
+    margin: 0 !important;
+    margin-top: 6px !important;
+    padding: 0;
+  }
+
+  & > input {
+    display: none;
+  }
+`;
 
 export const CheckoutScreen = () => {
+  const [currentTicketCount, setCurrentTicketCount] = React.useState(1);
   let { alias } = useParams();
   const {
     register,
@@ -83,6 +126,7 @@ export const CheckoutScreen = () => {
     formState: { errors },
   } = useForm();
   const onSubmit = (data: any) => console.log(data);
+
   return (
     <MainLayout logo="ontico" background="party1">
       <h3>Конференция HighLoad</h3>
@@ -91,6 +135,27 @@ export const CheckoutScreen = () => {
         высоконагруженных систем и их мамок, хахахаа будет гачи
       </p>
       <FormWrapper action="" onSubmit={handleSubmit(onSubmit)}>
+        <FormTicketsCountRow>
+          <span className="small-text">Количество билетов:</span>
+          <div>
+            {RADIO_VALUES.map((oneValue) => (
+              <TicketRadio
+                onClick={(event: any) =>
+                  setCurrentTicketCount(event.target.value)
+                }
+                key={oneValue}
+              >
+                <span>{oneValue}</span>
+                <input
+                  type="radio"
+                  value={oneValue}
+                  defaultChecked={currentTicketCount === 1 ? true : false}
+                  name="ticket-count"
+                />
+              </TicketRadio>
+            ))}
+          </div>
+        </FormTicketsCountRow>
         <FormRow>
           <label>
             <span>Email:</span>
