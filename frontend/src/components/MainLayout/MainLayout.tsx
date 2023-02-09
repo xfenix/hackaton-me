@@ -28,10 +28,22 @@ const GlobalStyle = createGlobalStyle<{ background: string }>`
     font-family: ${settings.DEFAULT_FONT_NAME};
     font-size: 14px;
     background: ${(props) =>
-      `url(./backgrounds/${
+      `url(/public/backgrounds/${
         props.background ? props.background : settings.DEFAULT_BACKGROUND
       }.webp)`} 50% 50% no-repeat;
     background-size: cover;
+    color: ${settings.COLOR_BLACK};
+  }
+
+  h3 {
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+
+  label,
+  .small-text {
+    font-size: 12px;
+    font-weight: bold;
   }
 `;
 export const AutisticWrapper = styled.div`
@@ -101,7 +113,7 @@ export const BackgroundDecoration = styled.div`
 `;
 
 export const MainLayout = (props: {
-  children: JSX.Element | string;
+  children: any;
   background: string;
   logo?: string;
 }) => {
@@ -116,7 +128,7 @@ export const MainLayout = (props: {
           {props.logo && (
             <HeaderRow>
               <img
-                src={`./logos/${props.logo}.${
+                src={`/public/logos/${props.logo}.${
                   settings.PNG_LOGOS.includes(props.logo) ? "png" : "svg"
                 }`}
                 alt="Логотип текущего мероприятия"

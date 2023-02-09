@@ -8,7 +8,7 @@ export const MainEntrypoint = () => {
     <Router>
       <MainStoreContext.Provider value={storeValue}>
         <Routes>
-          <Route path="/" element={<CheckoutScreen />} />
+          <Route path="/checkout/" element={<CheckoutScreen />} />
           <Route path="*" element={<NotFoundScreen />} />
         </Routes>
       </MainStoreContext.Provider>
