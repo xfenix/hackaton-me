@@ -1,8 +1,9 @@
+import datetime
+
 import pydantic
 
 
 class OrderBaseModel(pydantic.BaseModel):
-
     email: str | None = None
     phone: str | None = None
     tickets_count: int
@@ -20,3 +21,13 @@ class OrderIncomeModel(OrderBaseModel):
 
 class OrderDatabaseModel(OrderBaseModel):
     pass
+
+
+class EventInfoResponseModel(pydantic.BaseModel):
+    name: str
+    organization_name: str
+    description: str
+    date: datetime.datetime
+    price: str
+    logo: str
+    background: str
