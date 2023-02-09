@@ -4,16 +4,18 @@ import pydantic
 
 
 class IncomingOrder(pydantic.BaseModel):
-    email: str | None = None
-    phone: str | None = None
-    tickets_count: int
+    email: str | None = ''
+    phone: str | None = ''
+    ticket_count: int
     qr_alias: str
 
-    @pydantic.validator('email', 'phone')
-    def validate_email_or_phone(cls, v, values, **kwargs):
-        if not v:
-            raise ValueError('email or phone must be set')
-        return v
+    @pydantic.validator('email')
+    def validate_email_or_phone_present(cls, email, values, **kwargs):
+        print(values)
+        if email or 'phone' in values and values['phone'] != None:
+            return email
+
+        raise ValueError('Email or phone must be set')
 
 
 class Payment(pydantic.BaseModel):
