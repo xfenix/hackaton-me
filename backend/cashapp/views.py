@@ -2,7 +2,6 @@ import asyncio
 
 from django.http import (
     HttpRequest,
-    HttpResponse,
     HttpResponseBadRequest,
     HttpResponseNotFound,
     HttpResponseServerError,
@@ -18,14 +17,16 @@ from cashapp.clients import sbp
 from cashapp.services import barcodes
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class MakeOrderView(View):
+class ViewBase(View):
     @classonlymethod
     def as_view(cls, **initkwargs):
         view = super().as_view(**initkwargs)
         view._is_coroutine = asyncio.coroutines._is_coroutine
         return view
 
+
+@method_decorator(csrf_exempt, name='dispatch')
+class MakeOrderView(ViewBase):
     async def post(
         self, request
     ) -> JsonResponse | HttpResponseNotFound | HttpResponseBadRequest | HttpResponseServerError:
@@ -76,13 +77,7 @@ class MakeQr(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class FetchEventView(View):
-    @classonlymethod
-    def as_view(cls, **initkwargs):
-        view = super().as_view(**initkwargs)
-        view._is_coroutine = asyncio.coroutines._is_coroutine
-        return view
-
-    async def get(
+    def get(
         self, request: HttpRequest, event_qr_code_id: int
     ) -> JsonResponse | HttpResponseNotFound | HttpResponseBadRequest | HttpResponseServerError:
         event_qr_code: models.EventQRCode | None = models.EventQRCode.objects.get(id=event_qr_code_id)
@@ -90,7 +85,6 @@ class FetchEventView(View):
             raise HttpResponseNotFound('Event QR-code not found')
         event: models.Event = models.Event.objects.get(id=event_qr_code.event.id)
         event_organization: models.Organization = models.Organization.objects.get(id=event.organization.id)
-
         event_info: pydantic_models.EventInfoResponseModel = pydantic_models.EventInfoResponseModel(
             name=event.name,
             organization_name=event_organization.name,
@@ -100,4 +94,4 @@ class FetchEventView(View):
             logo=event.logo,
             background=event.background,
         )
-        return JsonResponse(dict(event_info))
+        return JsonResponse(event_info.dict())
