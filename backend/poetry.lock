@@ -112,20 +112,6 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
-name = "django-jet"
-version = "1.0.8"
-description = "Modern template for Django admin interface with improved functionality"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "django-jet-1.0.8.tar.gz", hash = "sha256:f521dc0873023afa198d2b57687e0593ee62022bd50fa59506dfce69b101cd9e"},
-]
-
-[package.dependencies]
-Django = "*"
-
-[[package]]
 name = "isort"
 version = "5.12.0"
 description = "A Python utility / library to sort Python imports."
@@ -303,4 +289,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "ef76f04112e9883342333817bc09ceed44073e42d399b274c68cc46be182aef8"
+content-hash = "c2eb870f13a42973cec3cc8a0586409a75779d481bc6a30c1690e7f17395d1fa"
