@@ -6,7 +6,7 @@ from cashapp import pydantic_models
 
 class RaifSBPClient:
     @staticmethod
-    async def send_payment(self, payment: pydantic_models.Payment) -> None:
+    async def send_payment(self, payment: pydantic_models.Payment) -> pydantic_models.SBPQRCod:
         redirect_url: str = f'{settings.URL_BASE}/{payment.order}'
         qr_code_request: pydantic_models.RaifQRCodeRequestPayload = pydantic_models.RaifQRCodeRequestPayload(
             qrType=settings.QR_TYPE,
