@@ -58,6 +58,14 @@ export const FormTicketsCountRow = styled.div`
 
   & > div {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  & input[type="number"] {
+    max-width: 120px;
+    display: block;
+    margin-left: 30px;
   }
 `;
 export const SubmitButton = styled.button`
@@ -154,6 +162,7 @@ export const CheckoutScreen = () => {
                 />
               </TicketRadio>
             ))}
+            <input type="number" placeholder="8" name="tickets-manual-count" />
           </div>
         </FormTicketsCountRow>
         <FormRow>
