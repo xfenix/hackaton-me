@@ -2,6 +2,7 @@ import { MainLayout } from "../../components/MainLayout";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import * as settings from "../../common/settings";
+import { useParams } from "react-router-dom";
 
 const TYPICAL_PADDING = 20;
 export const FormWrapper = styled.form`
@@ -66,6 +67,7 @@ export const SubmitButton = styled.button`
 `;
 
 export const CheckoutScreen = () => {
+  let { alias } = useParams();
   const {
     register,
     handleSubmit,
