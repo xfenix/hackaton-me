@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from cashapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('make-order/', views.MakeOrderView.as_view(), name='make_order'),
 ]

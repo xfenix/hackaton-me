@@ -9,6 +9,9 @@ readme = "README.md"
 python = "^3.11"
 django = "*"
 psycopg2 = "*"
+httpx = "^0.23.3"
+pydantic = "^1.10.4"
+envcast = "^1.2.0"
 
 
 [tool.poetry.group.dev.dependencies]
