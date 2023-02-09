@@ -1,10 +1,12 @@
 import asyncio
 
+import pydantic
 from django.http import (
     HttpRequest,
     HttpResponse,
     HttpResponseBadRequest,
     HttpResponseNotFound,
+    HttpResponseRedirect,
     HttpResponseServerError,
     JsonResponse,
 )
@@ -28,10 +30,11 @@ class ViewBase(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class MakeOrderView(ViewBase):
-    async def post(
-        self, request
-    ) -> JsonResponse | HttpResponseNotFound | HttpResponseBadRequest | HttpResponseServerError:
-        incoming_order: pydantic_models.IncomingOrder = pydantic_models.IncomingOrder(**request.POST)
+    async def post(self, request) -> HttpResponseNotFound | HttpResponseServerError | HttpResponseRedirect:
+        try:
+            incoming_order: pydantic_models.IncomingOrder = pydantic_models.IncomingOrder(**request.POST)
+        except pydantic.ValidationError:
+            return HttpResponseBadRequest("Please specify a email or phone, ticket count & qr code alias")
 
         event_qr_code: models.EventQRCode | None = models.EventQRCode.objects.filter(
             alias=incoming_order.qr_alias
@@ -40,26 +43,29 @@ class MakeOrderView(ViewBase):
             raise HttpResponseNotFound('Event not found')
 
         new_order: models.Order = models.Order.objects.create(
-            email=incoming_order.email,
-            phone=incoming_order.phone,
+            email=incoming_order.email if incoming_order.email else '',
+            phone=incoming_order.phone if incoming_order.email else '',
             tickets_count=incoming_order.tickets_count,
             event=event_qr_code.event,
         )
         new_order.save()
 
-        payment: pydantic_models.Payment = pydantic_models.Payment(
-            amount=order.tickets_count * event_qr_code.price,
-            order=event_qr_code.uuid,
-            merchant_id=event_qr_code.event.organization.merchant_id,
+        payment_qr_code: pydantic_models.SBPQRCode | None = await sbp.RaifSBPClient.send_payment(
+            pydantic_models.Payment(
+                amount=new_order.tickets_count * event_qr_code.price,
+                order=event_qr_code.uuid,
+                merchant_id=event_qr_code.event.organization.merchant_id,
+            )
         )
 
-        payment_qr_code: pydantic_models.SBPQRCode = await sbp.RaifSBPClient.send_payment(payment)
+        if not payment_qr_code:
+            return HttpResponseServerError("Failed to connect to SBP")
 
         order: models.Order = models.Order.objects.filter(id=new_order.id).update(
-            qr_id=payment_qr_code.qrId, qr_status=payment_qr_code.qrStatus, qr_url=payment_qr_url.qrUrl
+            qr_id=payment_qr_code.qrId, qr_status=payment_qr_code.qrStatus, qr_url=payment_qr_code.qrUrl
         )
 
-        return redirect(new_sbp_qr_code.qr_url)
+        return redirect(order.qr_url)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
