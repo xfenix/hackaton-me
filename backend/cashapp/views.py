@@ -8,12 +8,14 @@ from django.http import (
     HttpResponseServerError,
     JsonResponse,
 )
+
 from django.utils.decorators import classonlymethod, method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
 from cashapp import models, pydantic_models
 from cashapp.services import barcodes
+from cashapp.clients import sbp
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -25,18 +27,32 @@ class MakeOrderView(View):
         return view
 
     async def post(
-        self, request: HttpRequest
+        self, request
     ) -> JsonResponse | HttpResponseNotFound | HttpResponseBadRequest | HttpResponseServerError:
-        order_income: pydantic_models.OrderIncomeModel = pydantic_models.OrderIncomeModel(**request.POST)
+        incoming_order: pydantic_models.IncomingOrder = pydantic_models.IncomingOrder(**request.POST)
 
-        event: models.Event | None = models.EventQRCode.objects.filter(alias=order_income.event_alias).first()
-        if not event:
+        event_qr_code: models.EventQRCode | None = models.EventQRCode.objects.filter(
+            alias=incoming_order.qr_alias
+        ).first()
+        if not event_qr_code:
             raise HttpResponseNotFound('Event not found')
 
         new_order: models.Order = models.Order.objects.create(
-            email=order_income.email, phone=order_income.phone, tickets_count=order_income.tickets_count, event=event.id
+            email=incoming_order.email,
+            phone=incoming_order.phone,
+            tickets_count=incoming_order.tickets_count,
+            event=event_qr_code.event,
         )
-        new_order.save(returning=True)
+        new_order.save()
+
+        payment: pydantic_models.Payment = pydantic_models.Payment(
+            amount=order.tickets_count * event_qr_code.price,
+            order=event_qr_code.uuid,
+            merchant_id=event_code.event.organization.merchant_id,
+        )
+
+        sbp.RaifSBPClient.send_payment(payment)
+
         return HttpResponse('Order was made')
 
 
