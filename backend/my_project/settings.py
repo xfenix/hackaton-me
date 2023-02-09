@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-v_44o1ikx2_r%jv-kfqg92mocmnmi)i*wbbf=5!kx$!*^*_0zd'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = envparse.env("DEBUG", default=True, cast=bool)
+DEBUG = envparse("DEBUG", default=True, cast=bool)
 
 ALLOWED_HOSTS = ["*"]
 
@@ -127,30 +127,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 APP_URL_BASE: str = envparse('APP_URL', 'https://self-service-checkout-events.5723.raiff2023.codenrock.com').rstrip("/")
 REDIRECT_URL: str = envparse('PAYMENT_REDIRECT_URL', 'order', cast=str).strip('/')
-QR_GENERATION_URL: str = envparse('RAIFFEISEN_QR_CODE_URL', 'https://pay-test.raif.ru/api/sbp/v2/qrs').rstrip("/")
-QR_CODE_BOX_SIZE: int = envparse.env("QR_CODE_BOX_SIZE", default=40, cast=int)
-
-# Webhook and ivr emulation settings
-BACK_SELF_URL: str = 'http://back:' + envparse('NV_CHB_BACK_APP_PORT', '9991')
-FRONT_SERVICE_ADDR: str = f'http://front:{envparse("NV_CHB_FRONT_APP_PORT", "9991")}'
-WEBHOOK_API_URL_TPL: str = envparse(
-    'NV_CHB_BACK_WEBHOOK_API_URL_TPL', FRONT_SERVICE_ADDR + '/api/ext/webimautofaq/{}/questionsAsync'
-)
-WEBHOOK_SYNC_CACHE_KEY_TPL: str = 'chat-with-webhook-{}'
-WEBHOOK_CACHE_EXPIRE_TTL: int = 86400
-IVR_API_URL_TPL: str = envparse('NV_CHB_BACK_IVR_API_URL_TPL', FRONT_SERVICE_ADDR + '/api/ext/ivr/{}/question/')
-IVR_VERSION_HEADER: str = envparse('NV_CHB_BACK_IVR_VERSION_HEADER', 'application/vnd.nonvoice+json;version=2.0')
-OUTGOING_API_URL_TPL: str = envparse(
-    'NV_CHB_BACK_IVR_API_URL_TPL', FRONT_SERVICE_ADDR + '/api/ext/outgoing-pi/{}/question/'
-)
-OUTGOING_VERSION_HEADER: str = envparse(
-    'NV_CHB_BACK_OUTGOING_VERSION_HEADER', 'application/vnd.nonvoice+json;version=1.0'
-)
-REPORT_CACHE_EXPIRE_TIME: int = envparse('NV_CHB_BACK_REPORT_CACHE_EXPIRE_TIME', cast=int, default=60 * 15)
-REPORTER_TABLE_NAME: str = envparse('NV_CHB_SUGGEST_REPORTER_TABLE_NAME', default='suggest_reports', cast=str)
-
-# Platform skills endpoint access settings
-PLATFORM_API_DOMAIN: str = envparse('NV_CHB_BACK_PLATFORM_API_DOMAIN', 'https://r-chat-prev.raiffeisen.ru/').rstrip("/")
-PLATFORM_API_SKILLS_PATH: str = envparse('NV_CHB_BACK_PLATFORM_API_SKILLS_PATH', '/bot/channels/skills/').strip("/")
-PLATFORM_API_BOT_TOKEN: str = envparse('NV_CHB_BACK_PLATFORM_API_BOT_TOKEN', 'prev-bot-secret-token')
-REQUESTS_CA_BUNDLE: str = envparse('REQUESTS_CA_BUNDLE', 'path/to/certfile')
+QR_GENERATION_URL: str = envparse('RAIFFEISEN_SBP_URL', 'https://pay-test.raif.ru/api/sbp/v2/qrs', cast=str).rstrip("/")
+QR_CODE_BOX_SIZE: int = envparse("QR_CODE_BOX_SIZE", default=40, cast=int)
+QR_TYPE: str = envparse('QR_CODE_TYPE', 'QRDynamic', cast=str)

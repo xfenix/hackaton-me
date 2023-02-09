@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -15,7 +17,7 @@ class DateHistoryModel(models.Model):
 class Organization(DateHistoryModel):
     name: models.TextField = models.TextField(verbose_name=_("Organization name"))
     description: models.TextField = models.TextField(verbose_name=_("Organization description"))
-    merchant_id: models.TextField = models.TextField(verbose_name=_("Merchant id"))
+    merchant_id: models.TextField = models.TextField(verbose_name=_("Merchant id"), default='')
 
     def __str__(self) -> str:
         return self.name
@@ -45,21 +47,17 @@ class EventQRCode(DateHistoryModel):
         return self.alias
 
 
-class SBPQRCode(DateHistoryModel):
-    qr_id: models.TextField = models.TextField(verbose_name=_("QR ID"))
-    qr_status: models.TextField = models.TextField(verbose_name="QR Status")
-    qr_url: models.TextField = models.TextField(verbose_name=_("QR URL"))
-    order: models.ForeignKey = models.ForeignKey('Order', verbose_name=_("Order"))
-
-
 class Order(DateHistoryModel):
-    email: models.TextField = models.TextField(verbose_name=_("Customer email"))
-    phone: models.TextField = models.TextField(verbose_name=_("Customer phone"))
+    email: models.TextField = models.TextField(verbose_name=_("Customer email"), default='')
+    phone: models.TextField = models.TextField(verbose_name=_("Customer phone"), default='')
     tickets_count: models.TextField = models.TextField(verbose_name=_("Ticket count"))
-    merchant_reply: models.TextField = models.TextField(verbose_name=_("Merchant reply"))
-    status: models.TextField = models.TextField(verbose_name=_("Order status"))
+    merchant_reply: models.TextField = models.TextField(verbose_name=_("Merchant reply"), default='')
+    status: models.TextField = models.TextField(verbose_name=_("Order status"), default='')
+    uuid: models.UUIDField = models.UUIDField(default=uuid.uuid1, editable=False)
+    qr_id: models.TextField = models.TextField(verbose_name=_("QR ID"), default='')
+    qr_status: models.TextField = models.TextField(verbose_name="QR Status", default='')
+    qr_url: models.TextField = models.TextField(verbose_name=_("QR URL"), default='')
     event: models.ForeignKey = models.ForeignKey('Event', verbose_name=_('Event'), on_delete=models.CASCADE)
-    uuid: models.UUIDField(default=uuid.uuid1, editable=False)
 
     def __str__(self) -> str:
         return f'Order #{self.id}'

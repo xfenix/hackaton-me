@@ -1,4 +1,5 @@
 import { MainLayout } from "../../components/MainLayout";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import * as settings from "../../common/settings";
 
@@ -65,6 +66,13 @@ export const SubmitButton = styled.button`
 `;
 
 export const CheckoutScreen = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data: any) => console.log(data);
   return (
     <MainLayout logo="ontico" background="party1">
       <h3>Конференция HighLoad</h3>
@@ -72,11 +80,15 @@ export const CheckoutScreen = () => {
         Крупнейшая профессиональная конференция для разработчиков
         высоконагруженных систем и их мамок, хахахаа будет гачи
       </p>
-      <FormWrapper action="">
+      <FormWrapper action="" onSubmit={handleSubmit(onSubmit)}>
         <FormRow>
           <label>
             <span>Email:</span>
-            <input type="email" name="email" placeholder="Ваш email" />
+            <input
+              type="email"
+              placeholder="Ваш email"
+              {...register("email")}
+            />
           </label>
         </FormRow>
         <FormSeparator>
@@ -85,7 +97,11 @@ export const CheckoutScreen = () => {
         <FormRow>
           <label>
             <span>Телефон:</span>
-            <input type="tel" name="phone" placeholder="Ваш телефон" />
+            <input
+              type="tel"
+              placeholder="Ваш телефон"
+              {...register("phone")}
+            />
           </label>
         </FormRow>
         <SubmitButton type="submit">

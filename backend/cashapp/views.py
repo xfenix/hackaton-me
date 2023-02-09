@@ -2,6 +2,7 @@ import asyncio
 
 from django.http import (
     HttpRequest,
+    HttpResponse,
     HttpResponseBadRequest,
     HttpResponseNotFound,
     HttpResponseServerError,
@@ -49,24 +50,21 @@ class MakeOrderView(ViewBase):
         payment: pydantic_models.Payment = pydantic_models.Payment(
             amount=order.tickets_count * event_qr_code.price,
             order=event_qr_code.uuid,
-            merchant_id=event_code.event.organization.merchant_id,
+            merchant_id=event_qr_code.event.organization.merchant_id,
         )
 
         payment_qr_code: pydantic_models.SBPQRCode = await sbp.RaifSBPClient.send_payment(payment)
 
-        new_sbp_qr_code: models.SBPQRCode = models.SBPQRCode(
-            qr_id=payment_qr_code.qrId, qr_status=payment_qr_code.qrStatus, qr_url=payment_qr_url.qrUrl, order=new_order
+        order: models.Order = models.Order.objects.filter(id=new_order.id).update(
+            qr_id=payment_qr_code.qrId, qr_status=payment_qr_code.qrStatus, qr_url=payment_qr_url.qrUrl
         )
-        new_sbp_qr_code.save()
 
         return redirect(new_sbp_qr_code.qr_url)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class MakeQr(View):
-
     def get(self, request: HttpRequest, alias: str) -> HttpResponse | HttpResponseNotFound:
-
         event: models.EventQRCode | None = models.EventQRCode.objects.filter(alias=alias).first()
         if not event:
             return HttpResponseNotFound('Event not found')
