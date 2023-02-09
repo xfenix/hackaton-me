@@ -22,7 +22,7 @@ class Payment(pydantic.BaseModel):
     merchant_id: str
 
 
-class EventInfoResponseModel(pydantic.BaseModel):
+class EventInfoResponsePayload(pydantic.BaseModel):
     name: str
     organization_name: str
     description: str

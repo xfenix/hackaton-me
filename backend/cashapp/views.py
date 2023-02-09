@@ -83,7 +83,7 @@ class FetchEventView(View):
             raise HttpResponseNotFound('Event QR-code not found')
         event: models.Event = models.Event.objects.get(id=event_qr_code.event.id)
         event_organization: models.Organization = models.Organization.objects.get(id=event.organization.id)
-        event_info: pydantic_models.EventInfoResponseModel = pydantic_models.EventInfoResponseModel(
+        event_info: pydantic_models.EventInfoResponsePayload = pydantic_models.EventInfoResponsePayload(
             name=event.name,
             organization_name=event_organization.name,
             description=event.description,
