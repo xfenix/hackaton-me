@@ -76,9 +76,9 @@ class MakeQr(View):
 @method_decorator(csrf_exempt, name='dispatch')
 class FetchEventView(View):
     def get(
-        self, request: HttpRequest, event_qr_code_id: int
+        self, request: HttpRequest, alias_param: str
     ) -> JsonResponse | HttpResponseNotFound | HttpResponseBadRequest | HttpResponseServerError:
-        event_qr_code: models.EventQRCode | None = models.EventQRCode.objects.get(id=event_qr_code_id)
+        event_qr_code: models.EventQRCode | None = models.EventQRCode.objects.get(alias=alias_param)
         if not event_qr_code:
             raise HttpResponseNotFound('Event QR-code not found')
         event: models.Event = models.Event.objects.get(id=event_qr_code.event.id)
