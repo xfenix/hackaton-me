@@ -1,11 +1,13 @@
+import datetime
+
 import pydantic
 
 
-class OrderBaseModel(pydantic.BaseModel):
-
+class IncomingOrder(pydantic.BaseModel):
     email: str | None = None
     phone: str | None = None
     tickets_count: int
+    qr_alias: str
 
     @pydantic.validator('email', 'phone')
     def validate_email_or_phone(cls, v, values, **kwargs):
@@ -14,9 +16,32 @@ class OrderBaseModel(pydantic.BaseModel):
         return v
 
 
-class OrderIncomeModel(OrderBaseModel):
-    qr_alias: str
+class Payment(pydantic.BaseModel):
+    amount: int
+    order: str
+    merchant_id: str
 
 
-class OrderDatabaseModel(OrderBaseModel):
-    pass
+class EventInfoResponseModel(pydantic.BaseModel):
+    name: str
+    organization_name: str
+    description: str
+    date: datetime.datetime
+    price: str
+    logo: str
+    background: str
+
+
+class RaifQRCodeRequest(pydantic.BaseModel):
+    qrType: str
+    amount: int
+    currency: str | None = None
+    order: str
+    sbpMerchantId: str
+    redirectUrl: str
+
+
+class SBPQRCode(pydantic.BaseModel):
+    qrId: str
+    qrStatus: str
+    qrUrl: str

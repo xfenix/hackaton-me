@@ -1,20 +1,22 @@
-"""missing docstring"""
-
-
 import httpx
+from django.conf import settings
+
+from cashapp import models, pydantic_models
 
 
-class SBPClient:
+class RaifSBPClient:
+    @staticmethod
+    async def send_payment(self, payment: Payment) -> None:
+        redirect_url: str = f'{settings.URL_BASE}/{payment.order}'
+        qr_code_request: pydantic_models.RaifQRCodeRequest = pydantic_models.RaifQRCodeRequest(
+            qrType=settings.qrType,
+            amount=payment.amount,
+            currency=settings.CURRENCY,
+            order=payment.order,
+            sbpMerchantId=payment.merchant_id,
+            redirectUrl=redirect_url,
+        )
 
-    def __init__(self, *args, **kwargs):
-        pass
-
-    async def _make_client(self):
-        pass
-
-    async def send_payment(self, payment: Payment):
-        pass
-
-
-
-
+        async with httpx.AsyncClient() as client:
+            result: httpx.Response = await client.post(settings.QR_GENERATION_URL, qr_code_request.json())
+            return SBPQRCode(**result.json())

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AppMainStore, MainStoreContext } from "../../common";
-import { StartScreen } from "../../screens";
+import { NotFoundScreen, CheckoutScreen } from "../../screens";
 
 const storeValue = new AppMainStore();
 export const MainEntrypoint = () => {
@@ -8,7 +8,8 @@ export const MainEntrypoint = () => {
     <Router>
       <MainStoreContext.Provider value={storeValue}>
         <Routes>
-          <Route path="/" element={<StartScreen />} />
+          <Route path="/" element={<CheckoutScreen />} />
+          <Route path="*" element={<NotFoundScreen />} />
         </Routes>
       </MainStoreContext.Provider>
     </Router>
