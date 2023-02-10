@@ -122,7 +122,7 @@ class FetchEventView(View):
 @method_decorator(csrf_exempt, name='dispatch')
 class Pdf417CodeView(View):
     def get(self, request: HttpRequest, uuid: str) -> HttpResponse | HttpResponseNotFound | HttpResponseBadRequest:
-        order: models.Order | None = models.Order.objects.all()
+        order: models.Order | None = models.Order.objects.filter(uuid=uuid).first()
         if not order:
             return HttpResponseNotFound('Order not found')
         ticket_number: int = request.GET.get('ticket-number', 0)
@@ -148,3 +148,34 @@ class RaifPaymentView(View):
         current_order.status = models.Order.STATUS_MAP[payment_request.paymentStatus]
         current_order.save()
         return HttpResponse(f"Order has been processed with status: {payment_request.paymentStatus}.")
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class FinishOrderView(View):
+
+    @staticmethod
+    def _mask_email(email: str) -> str:
+        email_parts: list[str] = email.split('@')
+        email_parts[0] = email_parts[0][0] + '*' * (len(email_parts[0]) - 1)
+        return '@'.join(email_parts)
+
+    @staticmethod
+    def _mask_phone(phone: str) -> str:
+        return phone[:2] + '*' * (len(phone) - 4) + phone[-2:]
+
+    def get(self, request: HttpRequest, uuid: str) -> HttpResponse | HttpResponseNotFound:
+        order: models.Order | None = models.Order.objects.filter(uuid=uuid).first()
+        if not order:
+            return HttpResponseNotFound('Order not found')
+        event: models.Event = models.Event.objects.get(id=order.event.id)
+        return JsonResponse(
+            {
+                "name": event.name,
+                "description": event.description,
+                "background": event.background,
+                "logo": event.logo,
+                "status": order.status,
+                "phone": self._mask_phone(str(order.phone)) if order.phone else None,
+                "email": self._mask_email(str(order.email)) if order.email else None,
+            }
+        )
