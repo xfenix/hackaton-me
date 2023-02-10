@@ -45,5 +45,4 @@ class RaifQRCodeRequestPayload(pydantic.BaseModel):
 
 class SBPQRCode(pydantic.BaseModel):
     qrId: str
-    qrStatus: str
-    qrUrl: str
+    payload: str
