@@ -41,6 +41,7 @@ export const OrderScreen = () => {
     phone: string;
     email: string;
     tickets_count: number;
+    status: number;
   }>({
     name: "",
     description: "",
@@ -50,6 +51,7 @@ export const OrderScreen = () => {
     phone: "",
     email: "",
     tickets_count: 0,
+    status: 0,
   });
   React.useEffect(() => {
     // fetch data from server via fetch api
@@ -72,37 +74,53 @@ export const OrderScreen = () => {
 
   return (
     <MainLayout background={serverState.background} logo={serverState.logo}>
-      <h3>
-        {serverState.tickets_count > 1 ? "Ваши билеты" : "Ваш билет"} на
-        мероприятие «{serverState.name}»
-      </h3>
-      <EventDescription>{serverState.description}</EventDescription>
-      <div>
-        Покажите{" "}
-        {serverState.tickets_count > 1 ? "любой из штрих-кодов" : "штрих-код"}{" "}
-        на входе на мероприятии (нажмите на штрих-код, чтобы скачать):
-      </div>
-      {[...Array(serverState.tickets_count)].map((_, oneIndex) => (
-        <OneBarcodeItem key={oneIndex}>
-          <a
-            href={`${settings.API_PDF417_BARCODE}/${uuidFromUrl}/?ticket-number=${oneIndex}&download=1`}
-            target="_blank"
-          >
-            <img
-              src={`${settings.API_PDF417_BARCODE}/${uuidFromUrl}/?ticket-number=${oneIndex}`}
-              alt="Один билет на мероприятие"
-            />
-          </a>
-          {serverState.tickets_count > 1 ? (
-            <span>Билет {oneIndex + 1}</span>
-          ) : (
-            <></>
-          )}
-        </OneBarcodeItem>
-      ))}
-      <SubmittedFooterDescription>
-        Так же ссылка на эту страницу и чек отправлены на ваш {whereSubmitted}
-      </SubmittedFooterDescription>
+      {serverState.status === settings.GOOD_STATUS ? (
+        <>
+          <h3>
+            {serverState.tickets_count > 1 ? "Ваши билеты" : "Ваш билет"} на
+            мероприятие «{serverState.name}»
+          </h3>
+          <EventDescription>{serverState.description}</EventDescription>
+          <div>
+            Покажите{" "}
+            {serverState.tickets_count > 1
+              ? "любой из штрих-кодов"
+              : "штрих-код"}{" "}
+            на входе на мероприятии (нажмите на штрих-код, чтобы скачать):
+          </div>
+          {[...Array(serverState.tickets_count)].map((_, oneIndex) => (
+            <OneBarcodeItem key={oneIndex}>
+              <a
+                href={`${settings.API_PDF417_BARCODE}/${uuidFromUrl}/?ticket-number=${oneIndex}&download=1`}
+                target="_blank"
+              >
+                <img
+                  src={`${settings.API_PDF417_BARCODE}/${uuidFromUrl}/?ticket-number=${oneIndex}`}
+                  alt="Один билет на мероприятие"
+                />
+              </a>
+              {serverState.tickets_count > 1 ? (
+                <span>Билет {oneIndex + 1}</span>
+              ) : (
+                <></>
+              )}
+            </OneBarcodeItem>
+          ))}
+          <SubmittedFooterDescription>
+            Так же ссылка на эту страницу и чек отправлены на ваш{" "}
+            {whereSubmitted}
+          </SubmittedFooterDescription>
+        </>
+      ) : (
+        <>
+          <h3>Извините! Оплата ещё не завершена</h3>
+          <p>
+            Наша система ещё не получила подтверждение, что платеж успешно
+            завершен. Попробуйте, пожалуйста, обновить страницу. Как только
+            обновится статус, вы сможете увидеть свои билеты!
+          </p>
+        </>
+      )}
     </MainLayout>
   );
 };

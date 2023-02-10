@@ -7,6 +7,7 @@ export const COLOR_RED = "#EE505A";
 export const DEFAULT_FONT_NAME = "ALS Hauss";
 export const DEFAULT_BACKGROUND = "party2";
 export const PNG_LOGOS = ["ontico", "pycon"];
+export const GOOD_STATUS = 1;
 
 // const BACK_API_DOMAIN = "self-service-checkout-events-back.5723.raiff2023.codenrock.com";
 const BACK_API_DOMAIN = "127.0.0.1:8000";
