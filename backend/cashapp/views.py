@@ -22,7 +22,7 @@ from cashapp.clients import sbp
 from cashapp.services import barcodes
 
 
-class ViewBase(View):
+class AsyncView(View):
     @classonlymethod
     def as_view(cls, **initkwargs):
         view = super().as_view(**initkwargs)
@@ -58,7 +58,7 @@ def update_order_from_qr(new_order: models.Order, payment_qr_code: pydantic_mode
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class MakeOrderView(ViewBase):
+class MakeOrderView(AsyncView):
     async def post(self, request) -> HttpResponseNotFound | HttpResponseServerError | HttpResponseRedirect:
         try:
             decoded_json: dict[str, str | int] = json.loads(request.body.decode('utf-8'))
@@ -83,7 +83,7 @@ class MakeOrderView(ViewBase):
 
         order: models.Order = await update_order_from_qr(new_order, payment_qr_code)
 
-        return redirect(order.qr_url)
+        return JsonResponse(dict(redirect_to=order.qr_url))
 
 
 @method_decorator(csrf_exempt, name='dispatch')

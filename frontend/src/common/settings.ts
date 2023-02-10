@@ -11,4 +11,4 @@ export const PNG_LOGOS = ["ontico", "pycon"];
 const BACK_API_DOMAIN = "127.0.0.1:8000";
 export const BACK_API_ROOT = `http://${BACK_API_DOMAIN}/api`;
 export const API_FETCH_EVENT = `${BACK_API_ROOT}/fetch-event-info`;
-export const API_MAKE_ORDER = `${BACK_API_ROOT}/make-order`;
+export const API_MAKE_ORDER = `${BACK_API_ROOT}/make-order/`;
