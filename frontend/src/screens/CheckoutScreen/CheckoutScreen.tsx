@@ -165,6 +165,10 @@ export const CheckoutScreen = () => {
       .then((response) => response.json())
       .then((data) => {
         setServerData(data);
+      })
+      .catch((error) => {
+        console.log(error);
+        window.location.href = "/404/";
       });
   }, []);
 
