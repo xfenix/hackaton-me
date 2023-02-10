@@ -152,7 +152,6 @@ class RaifPaymentView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class FinishOrderView(View):
-
     @staticmethod
     def _mask_email(email: str) -> str:
         email_parts: list[str] = email.split('@')
@@ -177,5 +176,6 @@ class FinishOrderView(View):
                 "status": order.status,
                 "phone": self._mask_phone(str(order.phone)) if order.phone else None,
                 "email": self._mask_email(str(order.email)) if order.email else None,
+                "tickets_count": order.tickets_count,
             }
         )
