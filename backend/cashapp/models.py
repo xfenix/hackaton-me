@@ -61,15 +61,35 @@ class EventQRCode(DateHistoryModel):
 
 
 class Order(DateHistoryModel):
-    email: models.CharField = models.CharField(verbose_name=_("Customer email"), blank=True, default='', max_length=30)
-    phone: models.CharField = models.CharField(verbose_name=_("Customer phone"), blank=True, default='', max_length=16)
-    tickets_count: models.CharField = models.CharField(verbose_name=_("Ticket count"), max_length=5)
+    STATUS_SUCCESS: int = 1
+    STATUS_DECLINED: int = 2
+    STATUS_NO_INFO: int = 3
+    STATUS_IN_PROGRESS: int = 3
+    STATUSES: tuple = (
+        (STATUS_SUCCESS, _('Success')),
+        (STATUS_DECLINED, _('Declined')),
+        (STATUS_NO_INFO, _('No info')),
+        (STATUS_IN_PROGRESS, _('In progress')),
+    )
+    STATUS_MAP: dict = {
+        "SUCCESS": STATUS_SUCCESS,
+        "DECLINED": STATUS_DECLINED,
+        "NO_INFO": STATUS_NO_INFO,
+        "IN_PROGRESS": STATUS_IN_PROGRESS,
+    }
+    email: models.CharField = models.CharField(verbose_name=_("Customer email"), blank=True, default='', max_length=50)
+    phone: models.CharField = models.CharField(verbose_name=_("Customer phone"), blank=True, default='', max_length=20)
+    tickets_count: models.CharField = models.CharField(verbose_name=_("Ticket count"), max_length=10)
     merchant_reply: models.TextField = models.TextField(verbose_name=_("Merchant reply"), blank=True, default='')
-    status: models.CharField = models.CharField(verbose_name=_("Order status"), blank=True, default='', max_length=20)
+    status: models.PositiveSmallIntegerField = models.PositiveSmallIntegerField(
+        verbose_name="QR Status",
+        blank=True,
+        choices=STATUSES,
+        default=STATUS_NO_INFO,
+    )
     uuid: models.UUIDField = models.UUIDField(default=uuid.uuid1, editable=False)
-    qr_id: models.CharField = models.CharField(verbose_name=_("QR ID"), blank=True, default='', max_length=30)
-    qr_status: models.CharField = models.CharField(verbose_name="QR Status", blank=True, default='', max_length=30)
-    qr_url: models.CharField = models.CharField(verbose_name=_("QR URL"), blank=True, default='', max_length=255)
+    qr_id: models.CharField = models.CharField(verbose_name=_("QR ID"), blank=True, default='', max_length=50)
+    qr_url: models.CharField = models.CharField(verbose_name=_("QR URL"), blank=True, default='', max_length=100)
     event: models.ForeignKey = models.ForeignKey('Event', verbose_name=_('Event'), on_delete=models.CASCADE)
 
     def __str__(self) -> str:

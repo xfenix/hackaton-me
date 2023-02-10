@@ -1,8 +1,8 @@
 import typing
 
 from django.contrib import admin
-from django.db.models import JSONField, QuerySet
-from django.http import HttpRequest, HttpResponse
+from django.db.models import QuerySet
+from django.http import HttpRequest
 from django.template.response import TemplateResponse
 
 from cashapp import models
