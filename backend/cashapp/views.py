@@ -120,9 +120,17 @@ class FetchEventView(View):
         )
         return JsonResponse(event_info.dict())
 
+
 @method_decorator(csrf_exempt, name='dispatch')
-class SBPCallbackPayView(View):
+class RaifPaymentView(View):
     def post(
         self, request: HttpRequest
     ) -> JsonResponse | HttpResponseNotFound | HttpResponseBadRequest | HttpResponseServerError:
-        return HttpResponse("Message received okay.")
+        decoded_json: dict[str, str | int] = json.loads(request.body.decode('utf-8'))
+        payment_request: pydantic_models.RaifPaymentRequestPayload = pydantic_models.RaifPaymentRequestPayload(
+            **decoded_json
+        )
+        current_order = models.Order.objects.get(qr_id=payment_request.qrId)
+        current_order.status = models.Order.STATUS_MAP[request.paymentStatus]
+        current_order.save()
+        return HttpResponse(f"Order has been processed with status: {payment_request.paymentStatus}.")

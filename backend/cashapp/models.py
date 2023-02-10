@@ -48,14 +48,34 @@ class EventQRCode(DateHistoryModel):
 
 
 class Order(DateHistoryModel):
+    STATUS_SUCCESS: int = 1
+    STATUS_DECLINED: int = 2
+    STATUS_NO_INFO: int = 3
+    STATUS_IN_PROGRESS: int = 3
+    STATUSES: tuple = (
+        (STATUS_SUCCESS, _('Success')),
+        (STATUS_DECLINED, _('Declined')),
+        (STATUS_NO_INFO, _('No info')),
+        (STATUS_IN_PROGRESS, _('In progress')),
+    )
+    STATUS_MAP: dict = {
+        "SUCCESS": STATUS_SUCCESS,
+        "DECLINED": STATUS_DECLINED,
+        "NO_INFO": STATUS_NO_INFO,
+        "IN_PROGRESS": STATUS_IN_PROGRESS,
+    }
     email: models.TextField = models.TextField(verbose_name=_("Customer email"), blank=True, default='')
     phone: models.TextField = models.TextField(verbose_name=_("Customer phone"), blank=True, default='')
     tickets_count: models.TextField = models.TextField(verbose_name=_("Ticket count"))
     merchant_reply: models.TextField = models.TextField(verbose_name=_("Merchant reply"), blank=True, default='')
-    status: models.TextField = models.TextField(verbose_name=_("Order status"), blank=True, default='')
+    status: models.TextField = models.PositiveSmallIntegerField(
+        verbose_name="QR Status",
+        blank=True,
+        choices=STATUSES,
+        default=STATUS_NO_INFO,
+    )
     uuid: models.UUIDField = models.UUIDField(default=uuid.uuid1, editable=False)
     qr_id: models.TextField = models.TextField(verbose_name=_("QR ID"), blank=True, default='')
-    qr_status: models.TextField = models.TextField(verbose_name="QR Status", blank=True, default='')
     qr_url: models.TextField = models.TextField(verbose_name=_("QR URL"), blank=True, default='')
     event: models.ForeignKey = models.ForeignKey('Event', verbose_name=_('Event'), on_delete=models.CASCADE)
 

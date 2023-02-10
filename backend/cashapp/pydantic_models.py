@@ -23,6 +23,19 @@ class Payment(pydantic.BaseModel):
     order: str
     merchant_id: str
 
+class RaifPaymentRequestPayload(pydantic.BaseModel):
+    transactionId: int
+    qrId: str
+    sbpMerchantId: str
+    merchantId: int
+    amount: int
+    currency: str
+    transactionDate: datetime.datetime
+    paymentStatus: str
+    additionalInfo: str
+    order: str
+    createDate: datetime.datetime
+
 
 class EventInfoResponsePayload(pydantic.BaseModel):
     name: str
