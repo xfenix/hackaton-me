@@ -1,9 +1,13 @@
 import uuid
+from string import Template
 
 from django.conf import settings
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
+from .messengers import send_email, send_sms
 from .utils import make_django_title_list_from_tuple
 
 
@@ -94,3 +98,38 @@ class Order(DateHistoryModel):
 
     def __str__(self) -> str:
         return f'Order #{self.id}'
+
+
+@receiver(post_save, sender=Order)
+def post_save(sender: type[Order], instance: Order, **kwargs):
+    email_subject: str
+    email_text: str
+    sms_test: str
+    if instance.status == Order.STATUS_SUCCESS:
+        if instance.email:
+            send_email(
+                instance.email,
+                Template(settings.SUCCESS_EMAIL_SUBJECT).substitute(event_name=instance.event.name),
+                Template(settings.SUCCESS_EMAIL_TEXT).substitute(
+                    event_name=instance.event.name,
+                    link=f"{settings.APP_URL_BASE}/{settings.REDIRECT_URL}/{instance.uuid}",
+                ),
+            )
+        if instance.phone:
+            send_sms(
+                instance.phone,
+                Template(settings.SUCCESS_SMS_TEXT).substitute(
+                    event_name=instance.event.name,
+                    link=f"{settings.APP_URL_BASE}/{settings.REDIRECT_URL}/{instance.uuid}",
+                ),
+            )
+
+    if instance.status == Order.STATUS_DECLINED:
+        if instance.email:
+            send_email(
+                instance.email,
+                Template(settings.DECLINED_EMAIL_SUBJECT).substitute(event_name=instance.event.name),
+                Template(settings.DECLINED_EMAIL_TEXT).substitute(event_name=instance.event.name),
+            )
+        if instance.phone:
+            send_sms(instance.phone, Template(settings.DECLINED_SMS_TEXT).substitute(event_name=instance.event.name))
