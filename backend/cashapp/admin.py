@@ -12,6 +12,7 @@ class OrganizationAdmin(admin.ModelAdmin):
     list_display: tuple = (
         'name',
         'description',
+        'merchant_id',
     )
 
 
@@ -23,6 +24,7 @@ class EventAdmin(admin.ModelAdmin):
     )
     list_display: tuple = (
         'name',
+        'description',
         'event_date',
         'organization',
     )
@@ -62,14 +64,17 @@ class OrderAdmin(admin.ModelAdmin):
         'status',
     )
     list_display: tuple = (
+        'uuid',
         'email',
         'phone',
         'tickets_count',
         'merchant_reply',
         'status',
         'event',
+        'created',
     )
     list_display_links: tuple = (
+        'uuid',
         'email',
         'phone',
     )
