@@ -168,7 +168,11 @@ export const TicketRadio = styled.label<{ checked: boolean }>`
     display: none;
   }
 `;
-
+type FormValues = {
+  amount: string;
+  email: string;
+  phone: string;
+};
 export const CheckoutScreen = () => {
   const [serverState, setServerData] = React.useState<{
     name: string;
@@ -184,14 +188,30 @@ export const CheckoutScreen = () => {
     background: "",
   });
   let { alias } = useParams();
-  const { register, handleSubmit, watch, setValue } = useForm({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    setError,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       amount: "1",
       email: "",
       phone: "",
     },
   });
-  const onSubmit = (formData: any) => {
+  const onSubmit = (formData: FormValues) => {
+    if (!formData.email && !formData.phone) {
+      setError("email", {
+        type: "manual",
+      });
+      setError("phone", {
+        type: "manual",
+      });
+      return;
+    }
     fetch(settings.API_MAKE_ORDER, {
       method: "POST",
       headers: {
@@ -209,18 +229,18 @@ export const CheckoutScreen = () => {
         window.location.href = data.redirect_to;
       });
   };
-  React.useEffect(() => {
-    // fetch data from server via fetch api
-    fetch(`${settings.API_FETCH_EVENT}/${alias}/`)
-      .then((response) => response.json())
-      .then((data) => {
-        setServerData(data);
-      })
-      .catch((error) => {
-        console.log(error);
-        window.location.href = "/404/";
-      });
-  }, []);
+  // React.useEffect(() => {
+  //   // fetch data from server via fetch api
+  //   fetch(`${settings.API_FETCH_EVENT}/${alias}/`)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setServerData(data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       window.location.href = "/404/";
+  //     });
+  // }, []);
 
   return (
     <MainLayout logo={serverState.logo} background={serverState.background}>
