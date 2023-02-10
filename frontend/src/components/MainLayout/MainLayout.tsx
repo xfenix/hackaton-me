@@ -29,7 +29,7 @@ const GlobalStyle = createGlobalStyle<{ background: string }>`
     font-size: 14px;
     background: ${(props) =>
       `url(/public/backgrounds/${
-        props.background ? props.background : settings.DEFAULT_BACKGROUND
+        props.background ? props.background : ""
       }.webp)`} 50% 50% no-repeat;
     background-size: cover;
     color: ${settings.COLOR_BLACK};

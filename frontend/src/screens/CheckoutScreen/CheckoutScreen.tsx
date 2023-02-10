@@ -29,6 +29,9 @@ export const FormWrapper = styled.form`
   }
 `;
 export const FormRow = styled.div``;
+export const EventDescription = styled.div`
+  min-height: 100px;
+`;
 export const FormSeparator = styled.div`
   color: ${settings.COLOR_LIGHT_GRAY};
   display: flex;
@@ -135,9 +138,9 @@ export const CheckoutScreen = () => {
   }>({
     name: "",
     description: "",
-    price: 1000,
-    logo: "ontico",
-    background: "party2",
+    price: 0,
+    logo: "",
+    background: "",
   });
   let { alias } = useParams();
   const {
@@ -161,12 +164,12 @@ export const CheckoutScreen = () => {
       .then((data) => {
         setServerData(data);
       });
-  });
+  }, []);
 
   return (
     <MainLayout logo={serverState.logo} background={serverState.background}>
       <h3>{serverState.name}</h3>
-      <p>{serverState.description}</p>
+      <EventDescription>{serverState.description}</EventDescription>
       <FormWrapper action="" onSubmit={handleSubmit(onSubmit)}>
         <FormTicketsCountRow>
           <span className="small-text">Количество билетов:</span>
