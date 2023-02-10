@@ -99,3 +99,16 @@ class FetchEventView(View):
             background=event.background,
         )
         return JsonResponse(event_info.dict())
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class Pdf417CodeView(View):
+    def get(self, request: HttpRequest, uuid: str) -> HttpResponse | HttpResponseNotFound | HttpResponseBadRequest:
+        order: models.Order | None = models.Order.objects.all()
+        if not order:
+            return HttpResponseNotFound('Order not found')
+        ticket_number: int = request.GET.get('ticket-number', 0)
+        if not ticket_number:
+            return HttpResponseBadRequest('Ticket number not specified')
+        new_qr: str = barcodes.PDF417Code()(uuid, ticket_number)
+        return HttpResponse(new_qr, headers={'Content-Type': 'image/svg+xml'})

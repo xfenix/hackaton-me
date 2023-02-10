@@ -13,6 +13,7 @@ httpx = "^0.23.3"
 pydantic = "^1.10.4"
 qrcode = "^7.4.2"
 envparse = "^0.2.0"
+pdf417gen = "^0.7.1"
 
 
 [tool.poetry.group.dev.dependencies]
