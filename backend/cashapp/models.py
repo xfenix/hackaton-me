@@ -18,17 +18,17 @@ class DateHistoryModel(models.Model):
 
 
 class Organization(DateHistoryModel):
-    name: models.TextField = models.TextField(verbose_name=_("Organization name"))
+    name: models.CharField = models.CharField(verbose_name=_("Organization name"), max_length=100)
     description: models.TextField = models.TextField(verbose_name=_("Organization description"))
-    merchant_id: models.TextField = models.TextField(verbose_name=_("Merchant id"), default='')
+    merchant_id: models.CharField = models.CharField(verbose_name=_("Merchant id"), default='', max_length=50)
 
     def __str__(self) -> str:
         return self.name
 
 
 class Event(DateHistoryModel):
+    name: models.CharField = models.CharField(verbose_name=_("Event name"), max_length=255)
     description: models.TextField = models.TextField(verbose_name=_("Event description"))
-    name: models.TextField = models.TextField(verbose_name=_("Event name"))
     background: models.CharField = models.CharField(
         verbose_name=_("Event background"),
         max_length=255,
@@ -51,9 +51,9 @@ class Event(DateHistoryModel):
 
 
 class EventQRCode(DateHistoryModel):
-    alias: models.TextField = models.TextField(verbose_name=_("QR Code alias"), unique=True)
+    alias: models.CharField = models.CharField(verbose_name=_("QR Code alias"), unique=True, max_length=100)
     description: models.TextField = models.TextField(verbose_name=_("QR Code description"))
-    price: models.TextField = models.TextField(verbose_name=_("Event price"))
+    price: models.CharField = models.CharField(verbose_name=_("Event price"), max_length=30)
     event: models.ForeignKey = models.ForeignKey('Event', verbose_name=_('Event'), on_delete=models.CASCADE)
 
     def __str__(self) -> str:
@@ -77,19 +77,19 @@ class Order(DateHistoryModel):
         "NO_INFO": STATUS_NO_INFO,
         "IN_PROGRESS": STATUS_IN_PROGRESS,
     }
-    email: models.TextField = models.TextField(verbose_name=_("Customer email"), blank=True, default='')
-    phone: models.TextField = models.TextField(verbose_name=_("Customer phone"), blank=True, default='')
-    tickets_count: models.TextField = models.TextField(verbose_name=_("Ticket count"))
+    email: models.CharField = models.CharField(verbose_name=_("Customer email"), blank=True, default='', max_length=50)
+    phone: models.CharField = models.CharField(verbose_name=_("Customer phone"), blank=True, default='', max_length=20)
+    tickets_count: models.CharField = models.CharField(verbose_name=_("Ticket count"), max_length=10)
     merchant_reply: models.TextField = models.TextField(verbose_name=_("Merchant reply"), blank=True, default='')
-    status: models.TextField = models.PositiveSmallIntegerField(
+    status: models.PositiveSmallIntegerField = models.PositiveSmallIntegerField(
         verbose_name="QR Status",
         blank=True,
         choices=STATUSES,
         default=STATUS_NO_INFO,
     )
     uuid: models.UUIDField = models.UUIDField(default=uuid.uuid1, editable=False)
-    qr_id: models.TextField = models.TextField(verbose_name=_("QR ID"), blank=True, default='')
-    qr_url: models.TextField = models.TextField(verbose_name=_("QR URL"), blank=True, default='')
+    qr_id: models.CharField = models.CharField(verbose_name=_("QR ID"), blank=True, default='', max_length=50)
+    qr_url: models.CharField = models.CharField(verbose_name=_("QR URL"), blank=True, default='', max_length=100)
     event: models.ForeignKey = models.ForeignKey('Event', verbose_name=_('Event'), on_delete=models.CASCADE)
 
     def __str__(self) -> str:
