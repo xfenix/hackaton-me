@@ -193,5 +193,6 @@ SMS_PROVIDER_PASSWORD: str = envparse('SMS_PASSWORD', 'GachiEtoHorosho123@', cas
 
 EMAIL_ADDRESS_FROM: str = envparse('EMAIL_ADDRESS_FROM', 'povelitel.kachalok@ro.ru')
 EMAIL_ADDRESS_PASS: str = envparse('EMAIL_ADDRESS_PASS', 'Technopronzatel1')
+EMAIL_SERVER: str = envparse('EMAIL_SERVER', 'smtp.rambler.ru')
 
 NO_REPLY_EMAIL: str = envparse('EMAIL_ADDRESS_FROM_NO_REPLY', f'no-reply@{APP_URL_BASE}', cast=str)
