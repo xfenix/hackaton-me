@@ -144,7 +144,7 @@ export const CheckoutScreen = () => {
     handleSubmit,
     watch,
     formState: { errors },
-    getValues,
+    setValue,
   } = useForm({
     defaultValues: {
       amount: 1,
@@ -185,7 +185,9 @@ export const CheckoutScreen = () => {
               min={7}
               max={30}
               placeholder="8"
-              {...register("amount", { valueAsNumber: true })}
+              onChange={(eventBody) => {
+                setValue("amount", Number(eventBody.target.value));
+              }}
             />
           </div>
         </FormTicketsCountRow>
