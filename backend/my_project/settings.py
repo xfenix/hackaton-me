@@ -150,7 +150,7 @@ SUCCESS_EMAIL_TEXT: str = envparse(
     'SUCCESS_EMAIL_TEXT', "Ваши билеты на $event_name оплачены! Посмотреть их можно здесь: $link", cast=str
 )
 SUCCESS_SMS_TEXT: str = envparse(
-    'SUCCESS_SMS_TEXT', "Ваши билеты на $event_name оплачены! Посмотреть их можно здесь: $link", cast=str
+    'SUCCESS_SMS_TEXT', "Vashi bilety na $event_name oplacheny! Posmotret' ih mozhno zdes': $link", cast=str
 )
 
 DECLINED_EMAIL_SUBJECT: str = envparse(
@@ -165,7 +165,7 @@ DECLINED_EMAIL_TEXT: str = envparse(
 )
 DECLINED_SMS_TEXT: str = envparse(
     'DECLINED_SMS_TEXT',
-    "К сожалению оплата билетов на мероприятие $event_name не получилась. Попробуйте ещё раз.",
+    "K sozhaleniju oplata biletov na meroprijatie $event_name ne poluchilas'. Poprobujte eshhjo raz.",
     cast=str,
 )
 
@@ -173,6 +173,6 @@ DECLINED_SMS_TEXT: str = envparse(
 # https://smsc.ru/sys/send.php?login=xfenix&psw=GachiEtoHorosho123@&phones=79055310145&mes=Privet
 SMS_PROVIDER_URL: str = envparse('SMS_PROVIDER_URL', 'https://smsc.ru/sys/send.php', cast=str)
 SMS_PROVIDER_LOGIN: str = envparse('SMS_LOGIN', 'xfenix', cast=str)
-SMS_PROVIDER_PASSWORD: str = envparse('SMS_PASSWORD', 'GachiEtoHorosho123', cast=str)
+SMS_PROVIDER_PASSWORD: str = envparse('SMS_PASSWORD', 'GachiEtoHorosho123@', cast=str)
 
 NO_REPLY_EMAIL: str = envparse('EMAIL_ADDRESS_FROM_NO_REPLY', f'no-reply@{APP_URL_BASE}', cast=str)
