@@ -160,7 +160,6 @@ LOGO_CHOICES: tuple[str, ...] = ('16tonn', 'ontico', 'satirikon', 'pycon')
 
 CORS_ALLOW_ALL_ORIGINS: bool = True
 
-
 # Template messages sent out to users
 SUCCESS_EMAIL_SUBJECT: str = envparse('SUCCESS_EMAIL_SUBJECT', "Ваши билеты на $event_name оплачены!", cast=str)
 SUCCESS_EMAIL_TEXT: str = envparse(
