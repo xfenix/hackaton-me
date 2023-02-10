@@ -9,6 +9,10 @@ def getModelFields(model) -> tuple:
 
 @admin.register(models.Organization)
 class OrganizationAdmin(admin.ModelAdmin):
+    search_fields = (
+        'name',
+        'description',
+    )
     list_display: tuple = (
         'name',
         'description',
@@ -22,10 +26,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 @admin.register(models.Event)
 class EventAdmin(admin.ModelAdmin):
-    list_filter = (
-        'created',
-        'name',
-    )
+    list_filter = ('created',)
     list_display: tuple = (
         'name',
         'description',
