@@ -96,7 +96,7 @@ export const SubmitButton = styled.button`
     background: #fed500;
   }
 `;
-export const TicketRadio = styled.label`
+export const TicketRadio = styled.label<{ checked: boolean }>`
   font-size: 26px;
   line-height: 32px;
   width: 48px;
@@ -108,6 +108,7 @@ export const TicketRadio = styled.label`
   align-items: center;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  ${(props) => props.checked && `background: ${settings.COLOR_BRAND};`}
 
   &:hover {
     background: ${settings.COLOR_BRAND};
@@ -139,15 +140,9 @@ export const CheckoutScreen = () => {
     background: "party2",
   });
   let { alias } = useParams();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-    getValues,
-  } = useForm({
+  const { register, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
-      amount: 1,
+      amount: "1",
       email: "",
       phone: "",
     },
@@ -171,17 +166,28 @@ export const CheckoutScreen = () => {
           <span className="small-text">Количество билетов:</span>
           <div>
             {RADIO_VALUES.map((oneValue) => (
-              <TicketRadio key={oneValue}>
+              <TicketRadio
+                key={oneValue}
+                checked={watch("amount") === oneValue.toString()}
+              >
                 <span>{oneValue}</span>
                 <input type="radio" value={oneValue} {...register("amount")} />
               </TicketRadio>
             ))}
             <input
               type="number"
+              style={{
+                border:
+                  Number(watch("amount")) > 6
+                    ? `1px solid ${settings.COLOR_BRAND}`
+                    : "none",
+              }}
               min={7}
               max={30}
               placeholder="8"
-              {...register("amount")}
+              onChange={(eventBody) => {
+                setValue("amount", eventBody.target.value);
+              }}
             />
           </div>
         </FormTicketsCountRow>
@@ -222,7 +228,9 @@ export const CheckoutScreen = () => {
             />
           </svg>
           <span>Оплатить</span>
-          <strong>{formatPrice(serverState.price * watch("amount"))} ₽</strong>
+          <strong>
+            {formatPrice(serverState.price * Number(watch("amount")))} ₽
+          </strong>
         </SubmitButton>
       </FormWrapper>
     </MainLayout>

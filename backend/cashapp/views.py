@@ -53,9 +53,7 @@ def create_payment_from_qr_code(new_order: models.Order, event_qr_code: models.E
 
 @sync_to_async
 def update_order_from_qr(new_order: models.Order, payment_qr_code: pydantic_models.SBPQRCode) -> models.Order:
-    models.Order.objects.filter(id=new_order.id).update(
-        qr_id=payment_qr_code.qrId, qr_status=payment_qr_code.qrStatus, qr_url=payment_qr_code.qrUrl
-    )
+    models.Order.objects.filter(id=new_order.id).update(qr_id=payment_qr_code.qrId, qr_url=payment_qr_code.payload)
     return models.Order.objects.filter(id=new_order.id).first()
 
 
@@ -119,6 +117,19 @@ class FetchEventView(View):
             background=event.background,
         )
         return JsonResponse(event_info.dict())
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class Pdf417CodeView(View):
+    def get(self, request: HttpRequest, uuid: str) -> HttpResponse | HttpResponseNotFound | HttpResponseBadRequest:
+        order: models.Order | None = models.Order.objects.all()
+        if not order:
+            return HttpResponseNotFound('Order not found')
+        ticket_number: int = request.GET.get('ticket-number', 0)
+        if not ticket_number:
+            return HttpResponseBadRequest('Ticket number not specified')
+        new_qr: str = barcodes.PDF417Code()(uuid, ticket_number)
+        return HttpResponse(new_qr, headers={'Content-Type': 'image/svg+xml'})
 
 
 @method_decorator(csrf_exempt, name='dispatch')

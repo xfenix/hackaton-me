@@ -18,7 +18,9 @@ class RaifSBPClient:
         )
 
         if settings.DEBUG:
-            return pydantic_models.SBPQRCode(**{'qrId': 'mock-id', 'qrStatus': 'NEW', 'qrUrl': 'https://raiffeisen.ru'})
+            return pydantic_models.SBPQRCode(
+                **{'qrId': 'mock-id', 'qrStatus': 'NEW', 'payload': 'https://raiffeisen.ru'}
+            )
 
         async with httpx.AsyncClient() as client:
             try:

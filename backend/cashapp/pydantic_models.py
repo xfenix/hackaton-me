@@ -4,18 +4,18 @@ import pydantic
 
 
 class IncomingOrder(pydantic.BaseModel):
-    email: str | None = ''
+    email: pydantic.EmailStr | None = ''
     phone: str | None = ''
     ticket_count: int
     qr_alias: str
 
-    @pydantic.validator('email')
-    def validate_email_or_phone_present(cls, email, values, **kwargs):
-        print(values)
-        if email or 'phone' in values and values['phone'] != None:
-            return email
-
-        raise ValueError('Email or phone must be set')
+    @pydantic.root_validator()
+    def validate(cls, values: dict[str, str | None]):
+        if values.get('phone'):
+            values['phone'] = values['phone'].strip()
+        if not values.get("email") and not values.get("phone").strip():
+            raise ValueError("email or phone must be specified")
+        return values
 
 
 class Payment(pydantic.BaseModel):
@@ -58,5 +58,4 @@ class RaifQRCodeRequestPayload(pydantic.BaseModel):
 
 class SBPQRCode(pydantic.BaseModel):
     qrId: str
-    qrStatus: str
-    qrUrl: str
+    payload: str
