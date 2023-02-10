@@ -82,7 +82,7 @@ class Order(DateHistoryModel):
     tickets_count: models.IntegerField = models.IntegerField(verbose_name=_("Ticket count"))
     merchant_reply: models.TextField = models.TextField(verbose_name=_("Merchant reply"), blank=True, default='')
     status: models.PositiveSmallIntegerField = models.PositiveSmallIntegerField(
-        verbose_name="QR Status",
+        verbose_name="Status",
         blank=True,
         choices=STATUSES,
         default=STATUS_NO_INFO,

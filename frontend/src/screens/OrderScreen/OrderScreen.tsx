@@ -13,6 +13,11 @@ const SubmittedFooterDescription = styled.p`
 const OneBarcodeItem = styled.div`
   overflow: hidden;
   margin-top: 20px;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
 
   & > span {
     font-size: 12px;
