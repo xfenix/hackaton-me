@@ -4,6 +4,7 @@ import {
   NotFoundScreen,
   CheckoutScreen,
   EventIsOverScreen,
+  OrderScreen,
 } from "../../screens";
 
 const storeValue = new AppMainStore();
@@ -15,6 +16,7 @@ export const MainEntrypoint = () => {
           <Route path="/checkout/:alias" element={<CheckoutScreen />} />
           <Route path="/" element={<CheckoutScreen />} />
           <Route path="/over" element={<EventIsOverScreen />} />
+          <Route path="/order/:uuidFromUrl" element={<OrderScreen />} />
           <Route path="*" element={<NotFoundScreen />} />
         </Routes>
       </MainStoreContext.Provider>

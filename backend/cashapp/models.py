@@ -89,7 +89,7 @@ class Order(DateHistoryModel):
     )
     uuid: models.UUIDField = models.UUIDField(default=uuid.uuid1, editable=False)
     qr_id: models.CharField = models.CharField(verbose_name=_("QR ID"), blank=True, default='', max_length=50)
-    qr_url: models.CharField = models.CharField(verbose_name=_("QR URL"), blank=True, default='', max_length=100)
+    qr_url: models.CharField = models.CharField(verbose_name=_("QR URL"), blank=True, default='', max_length=255)
     event: models.ForeignKey = models.ForeignKey('Event', verbose_name=_('Event'), on_delete=models.CASCADE)
 
     def __str__(self) -> str:

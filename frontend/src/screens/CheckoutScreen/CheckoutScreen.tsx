@@ -173,6 +173,7 @@ type FormValues = {
   email: string;
   phone: string;
 };
+
 export const CheckoutScreen = () => {
   const [serverState, setServerData] = React.useState<{
     name: string;
