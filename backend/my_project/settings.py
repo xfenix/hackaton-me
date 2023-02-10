@@ -141,3 +141,6 @@ BACKGROUND_CHOICES: tuple[str, ...] = ('orchestra', 'conference', 'museum', 'par
 LOGO_CHOICES: tuple[str, ...] = ('16tonn', 'ontico', 'satirikon', 'pycon')
 
 CORS_ALLOW_ALL_ORIGINS: bool = True
+
+SMS_LOGIN: str = envparse('SMS_LOGIN', 'xfenix', cast=str)
+SMS_PASSWORD: str = envparse('SMS_PASSWORD', 'GachiEtoHorosho123', cast=str)

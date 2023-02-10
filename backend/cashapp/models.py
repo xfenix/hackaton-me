@@ -79,7 +79,7 @@ class Order(DateHistoryModel):
     }
     email: models.CharField = models.CharField(verbose_name=_("Customer email"), blank=True, default='', max_length=50)
     phone: models.CharField = models.CharField(verbose_name=_("Customer phone"), blank=True, default='', max_length=20)
-    tickets_count: models.CharField = models.CharField(verbose_name=_("Ticket count"), max_length=10)
+    tickets_count: models.IntegerField = models.IntegerField(verbose_name=_("Ticket count"))
     merchant_reply: models.TextField = models.TextField(verbose_name=_("Merchant reply"), blank=True, default='')
     status: models.PositiveSmallIntegerField = models.PositiveSmallIntegerField(
         verbose_name="QR Status",

@@ -13,7 +13,7 @@ class IncomingOrder(pydantic.BaseModel):
     def validate(cls, values: dict[str, str | None]):
         if values.get('phone'):
             values['phone'] = values['phone'].strip()
-        if not values.get("email") and not values.get("phone").strip():
+        if not values.get("email") and not values.get("phone", "").strip():
             raise ValueError("email or phone must be specified")
         return values
 
