@@ -30,8 +30,9 @@ const GlobalStyle = createGlobalStyle<{ background: string }>`
     background: ${(props) =>
       `url(/public/backgrounds/${
         props.background ? props.background : ""
-      }.webp)`} 50% 50% no-repeat;
+      }.webp)`} no-repeat;
     background-size: cover;
+    background-attachment: fixed;
     color: ${settings.COLOR_BLACK};
   }
 
@@ -54,6 +55,8 @@ export const AutisticWrapper = styled.div`
   margin: 24px;
 `;
 export const GlassWrapper = styled.main`
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   background: rgba(195, 193, 214, 0.4);
   border: 1px solid #cfcdde;
@@ -82,7 +85,7 @@ export const HeaderRow = styled.header`
   }
 `;
 export const BackgroundDecoration = styled.div`
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   width: 100%;

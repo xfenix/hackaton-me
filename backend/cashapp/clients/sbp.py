@@ -22,7 +22,7 @@ class RaifSBPClient:
                 result: httpx.Response = await client.post(settings.QR_GENERATION_URL, json=qr_code_request.dict())
                 result.raise_for_status()
             except httpx.HTTPError as exc:
-                print(f"Error while requesting {exc} {result}.")
+                print(f"Error while requesting {exc} {result.content}.")
                 return None
 
             return pydantic_models.SBPQRCode(**result.json())
