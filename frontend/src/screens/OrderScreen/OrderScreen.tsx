@@ -72,17 +72,22 @@ export const OrderScreen = () => {
         мероприятие «{serverState.name}»
       </h3>
       <EventDescription>{serverState.description}</EventDescription>
-      <div className="small-text">
+      <div>
         Покажите{" "}
-        {serverState.tickets_count > 1 ? "любой из штрих-кодов" : "штрих-код"}
-        на входе на мероприятие:
+        {serverState.tickets_count > 1 ? "любой из штрих-кодов" : "штрих-код"}{" "}
+        на входе на мероприятии (нажмите на штрих-код, чтобы скачать):
       </div>
       {[...Array(serverState.tickets_count)].map((_, oneIndex) => (
         <OneBarcodeItem key={oneIndex}>
-          <img
-            src={`${settings.API_PDF417_BARCODE}/${uuidFromUrl}/?ticket-number=${oneIndex}`}
-            alt="Один билет на мероприятие"
-          />
+          <a
+            href={`${settings.API_PDF417_BARCODE}/${uuidFromUrl}/?ticket-number=${oneIndex}&download=1`}
+            target="_blank"
+          >
+            <img
+              src={`${settings.API_PDF417_BARCODE}/${uuidFromUrl}/?ticket-number=${oneIndex}`}
+              alt="Один билет на мероприятие"
+            />
+          </a>
           {serverState.tickets_count > 1 ? (
             <span>Билет {oneIndex + 1}</span>
           ) : (

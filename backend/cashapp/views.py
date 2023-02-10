@@ -125,10 +125,19 @@ class Pdf417CodeView(View):
         if not order:
             return HttpResponseNotFound('Order not found')
         ticket_number: int = request.GET.get('ticket-number', 0)
+        should_download: bool = request.GET.get('download', False) == "1"
         if not ticket_number:
             return HttpResponseBadRequest('Ticket number not specified')
         new_qr: str = barcodes.PDF417Code()(uuid, ticket_number)
-        return HttpResponse(new_qr, headers={'Content-Type': 'image/svg+xml'})
+        return HttpResponse(
+            new_qr,
+            headers={
+                'Conten-Type': 'application/octet-stream',
+                'Content-Disposition': f'attachment; filename="barcode-{uuid}-{ticket_number}.svg"',
+            }
+            if should_download
+            else {'Content-Type': 'image/svg+xml'},
+        )
 
 
 @method_decorator(csrf_exempt, name='dispatch')
