@@ -333,7 +333,9 @@ export const CheckoutScreen = () => {
               }
               title={
                 calcTotalSumm() > settings.MAXIMUM_PAYMENT_AMOUNT
-                  ? `Извините, через SPB можно заплатить не более чем ${settings.MAXIMUM_PAYMENT_AMOUNT} рублей`
+                  ? `Извините, через SPB можно заплатить не более чем ${formatPrice(
+                      settings.MAXIMUM_PAYMENT_AMOUNT
+                    )} рублей`
                   : ""
               }
             >
