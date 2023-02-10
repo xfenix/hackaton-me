@@ -1,7 +1,10 @@
 import uuid
 
+from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from .utils import make_django_title_list_from_tuple
 
 
 class DateHistoryModel(models.Model):
@@ -26,8 +29,18 @@ class Organization(DateHistoryModel):
 class Event(DateHistoryModel):
     description: models.TextField = models.TextField(verbose_name=_("Event description"))
     name: models.TextField = models.TextField(verbose_name=_("Event name"))
-    background: models.TextField = models.TextField(verbose_name=_("Event background"))
-    logo: models.TextField = models.TextField(verbose_name=_("Event logo"))
+    background: models.CharField = models.CharField(
+        verbose_name=_("Event background"),
+        max_length=255,
+        default=make_django_title_list_from_tuple(settings.BACKGROUND_CHOICES)[0],
+        choices=make_django_title_list_from_tuple(settings.BACKGROUND_CHOICES),
+    )
+    logo: models.CharField = models.CharField(
+        verbose_name=_("Event logo"),
+        max_length=255,
+        default=make_django_title_list_from_tuple(settings.LOGO_CHOICES)[0],
+        choices=make_django_title_list_from_tuple(settings.LOGO_CHOICES),
+    )
     event_date: models.DateTimeField = models.DateTimeField(verbose_name=_('Event date and time'))
     organization: models.ForeignKey = models.ForeignKey(
         'Organization', verbose_name=_('Organization'), on_delete=models.CASCADE

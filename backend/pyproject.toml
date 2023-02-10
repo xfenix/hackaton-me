@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "backend"
-version = "0.1.0"
-description = "Backend for self-service event cash machine"
+name = "self-service-checkout-backend"
+version = "1.0.0"
+description = "Backend for self-service ticket machine"
 authors = []
 readme = "README.md"
 
@@ -14,7 +14,6 @@ pydantic = {extras = ["email"], version = "^1.10.4"}
 qrcode = "^7.4.2"
 envparse = "^0.2.0"
 pdf417gen = "^0.7.1"
-
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
@@ -48,7 +47,6 @@ known_third_party = [
 ]
 multi_line_output = 3
 lines_after_imports = 2
-
 
 [build-system]
 requires = ["poetry-core"]
