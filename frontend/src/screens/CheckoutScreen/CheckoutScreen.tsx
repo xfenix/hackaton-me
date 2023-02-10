@@ -140,13 +140,7 @@ export const CheckoutScreen = () => {
     background: "party2",
   });
   let { alias } = useParams();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-    setValue,
-  } = useForm({
+  const { register, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
       amount: "1",
       email: "",
@@ -182,6 +176,12 @@ export const CheckoutScreen = () => {
             ))}
             <input
               type="number"
+              style={{
+                border:
+                  Number(watch("amount")) > 6
+                    ? `1px solid ${settings.COLOR_BRAND}`
+                    : "none",
+              }}
               min={7}
               max={30}
               placeholder="8"
