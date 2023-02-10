@@ -6,7 +6,6 @@ import { formatPrice } from "../../common/helpers";
 import { useParams } from "react-router-dom";
 import React from "react";
 import { Spinner } from "../../components";
-import dayjs from "dayjs";
 
 const TYPICAL_PADDING = 20;
 const RADIO_VALUES = [1, 2, 3, 4, 5];
@@ -244,7 +243,6 @@ export const CheckoutScreen = () => {
       });
   };
   React.useEffect(() => {
-    // fetch data from server via fetch api
     fetch(`${settings.API_FETCH_EVENT}/${alias}/`)
       .then((response) => response.json())
       .then((data) => {

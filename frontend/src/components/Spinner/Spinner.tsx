@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import * as settings from "../../common/settings";
 
 const SpinnerWrapper = styled.img`
   width: 100px;

@@ -19,6 +19,7 @@ def send_email(to: str, subject: str, text: str) -> None:
 
 def send_sms(to: str, text: str) -> None:
     try:
+        # TODO: remove debug
         print(
             (
                 f'{settings.SMS_PROVIDER_URL}?login={settings.SMS_PROVIDER_LOGIN}&'
