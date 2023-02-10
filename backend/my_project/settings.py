@@ -191,4 +191,7 @@ SMS_PROVIDER_URL: str = envparse('SMS_PROVIDER_URL', 'https://smsc.ru/sys/send.p
 SMS_PROVIDER_LOGIN: str = envparse('SMS_LOGIN', 'xfenix', cast=str)
 SMS_PROVIDER_PASSWORD: str = envparse('SMS_PASSWORD', 'GachiEtoHorosho123@', cast=str)
 
+EMAIL_ADDRESS_FROM: str = envparse('EMAIL_ADDRESS_FROM', 'povelitel.kachalok@ro.ru')
+EMAIL_ADDRESS_PASS: str = envparse('EMAIL_ADDRESS_PASS', 'Technopronzatel1')
+
 NO_REPLY_EMAIL: str = envparse('EMAIL_ADDRESS_FROM_NO_REPLY', f'no-reply@{APP_URL_BASE}', cast=str)
