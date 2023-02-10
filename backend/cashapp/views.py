@@ -53,7 +53,7 @@ def create_payment_from_qr_code(new_order: models.Order, event_qr_code: models.E
 
 @sync_to_async
 def update_order_from_qr(new_order: models.Order, payment_qr_code: pydantic_models.SBPQRCode) -> models.Order:
-    models.Order.objects.filter(id=new_order.id).update(qr_id=payment_qr_code.qrId, qr_url=payment_qr_code.qrUrl)
+    models.Order.objects.filter(id=new_order.id).update(qr_id=payment_qr_code.qrId, qr_url=payment_qr_code.payload)
     return models.Order.objects.filter(id=new_order.id).first()
 
 
@@ -130,10 +130,18 @@ class Pdf417CodeView(View):
             return HttpResponseBadRequest('Ticket number not specified')
         new_qr: str = barcodes.PDF417Code()(uuid, ticket_number)
         return HttpResponse(new_qr, headers={'Content-Type': 'image/svg+xml'})
-    
+
+
 @method_decorator(csrf_exempt, name='dispatch')
-class SBPCallbackPayView(View):
+class RaifPaymentView(View):
     def post(
         self, request: HttpRequest
     ) -> JsonResponse | HttpResponseNotFound | HttpResponseBadRequest | HttpResponseServerError:
-        return HttpResponse("Message received okay.")
+        decoded_json: dict[str, str | int] = json.loads(request.body.decode('utf-8'))
+        payment_request: pydantic_models.RaifPaymentRequestPayload = pydantic_models.RaifPaymentRequestPayload(
+            **decoded_json
+        )
+        current_order = models.Order.objects.get(qr_id=payment_request.qrId)
+        current_order.status = models.Order.STATUS_MAP[request.paymentStatus]
+        current_order.save()
+        return HttpResponse(f"Order has been processed with status: {payment_request.paymentStatus}.")
