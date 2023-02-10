@@ -14,3 +14,4 @@ export const BACK_API_ROOT = `http://${BACK_API_DOMAIN}/api`;
 export const API_FETCH_EVENT = `${BACK_API_ROOT}/fetch-event-info`;
 export const API_MAKE_ORDER = `${BACK_API_ROOT}/make-order/`;
 export const API_FINISH_ORDER = `${BACK_API_ROOT}/finish-order`;
+export const API_PDF417_BARCODE = `${BACK_API_ROOT}/pdf417-code`;
