@@ -4,8 +4,10 @@ import styled from "styled-components";
 import * as settings from "../../common/settings";
 import { formatPrice } from "../../common/helpers";
 import { useParams } from "react-router-dom";
+import React from "react";
 
 const TYPICAL_PADDING = 20;
+const RADIO_VALUES = [1, 2, 3, 4, 5, 6];
 export const FormWrapper = styled.form`
   margin-top: 32px;
 
@@ -45,6 +47,27 @@ export const FormSeparator = styled.div`
     width: 100%;
   }
 `;
+export const FormTicketsCountRow = styled.div`
+  padding: 0 ${TYPICAL_PADDING}px;
+  margin-bottom: 24px;
+
+  & > span {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  & > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  & input[type="number"] {
+    max-width: 120px;
+    display: block;
+    margin-left: 30px;
+  }
+`;
 export const SubmitButton = styled.button`
   margin-top: 32px;
   background: ${settings.COLOR_BRAND};
@@ -73,24 +96,101 @@ export const SubmitButton = styled.button`
     background: #fed500;
   }
 `;
+export const TicketRadio = styled.label`
+  font-size: 26px;
+  line-height: 32px;
+  width: 48px;
+  height: 48px;
+  font-weight: normal;
+  border-radius: 100% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: ${settings.COLOR_BRAND};
+  }
+
+  & > span {
+    margin: 0 !important;
+    margin-top: 6px !important;
+    padding: 0;
+  }
+
+  & > input {
+    display: none;
+  }
+`;
 
 export const CheckoutScreen = () => {
+  const [serverState, setServerData] = React.useState<{
+    name: string;
+    description: string;
+    price: number;
+    logo: string;
+    background: string;
+  }>({
+    name: "",
+    description: "",
+    price: 1000,
+    logo: "ontico",
+    background: "party2",
+  });
   let { alias } = useParams();
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+    setValue,
+  } = useForm({
+    defaultValues: {
+      amount: 1,
+      email: "",
+      phone: "",
+    },
+  });
   const onSubmit = (data: any) => console.log(data);
+  React.useEffect(() => {
+    // fetch data from server via fetch api
+    fetch(`${settings.BACK_API_ROOT}/fetch-event-info/${alias}/`)
+      .then((response) => response.json())
+      .then((data) => {
+        setServerData(data);
+      });
+  });
+
   return (
-    <MainLayout logo="ontico" background="party1">
-      <h3>Конференция HighLoad</h3>
-      <p>
-        Крупнейшая профессиональная конференция для разработчиков
-        высоконагруженных систем и их мамок, хахахаа будет гачи
-      </p>
+    <MainLayout logo={serverState.logo} background={serverState.background}>
+      <h3>{serverState.name}</h3>
+      <p>{serverState.description}</p>
       <FormWrapper action="" onSubmit={handleSubmit(onSubmit)}>
+        <FormTicketsCountRow>
+          <span className="small-text">Количество билетов:</span>
+          <div>
+            {RADIO_VALUES.map((oneValue) => (
+              <TicketRadio key={oneValue}>
+                <span>{oneValue}</span>
+                <input
+                  type="radio"
+                  value={oneValue}
+                  {...register("amount", { valueAsNumber: true })}
+                />
+              </TicketRadio>
+            ))}
+            <input
+              type="number"
+              min={7}
+              max={30}
+              placeholder="8"
+              onChange={(eventBody) => {
+                setValue("amount", Number(eventBody.target.value));
+              }}
+            />
+          </div>
+        </FormTicketsCountRow>
         <FormRow>
           <label>
             <span>Email:</span>
@@ -128,7 +228,7 @@ export const CheckoutScreen = () => {
             />
           </svg>
           <span>Оплатить</span>
-          <strong>{formatPrice(1585)} ₽</strong>
+          <strong>{formatPrice(serverState.price * watch("amount"))} ₽</strong>
         </SubmitButton>
       </FormWrapper>
     </MainLayout>
