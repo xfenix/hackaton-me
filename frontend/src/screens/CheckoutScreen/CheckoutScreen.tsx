@@ -180,14 +180,15 @@ export const CheckoutScreen = () => {
             <input
               type="number"
               style={{
-                border:
+                border: `1px solid ${
                   Number(watch("amount")) > 6
-                    ? `1px solid ${settings.COLOR_BRAND}`
-                    : "none",
+                    ? settings.COLOR_BRAND
+                    : settings.COLOR_VERY_LIGHT_GRAY
+                }`,
               }}
               min={7}
               max={30}
-              placeholder="8"
+              placeholder="7"
               onChange={(eventBody) => {
                 setValue("amount", eventBody.target.value);
               }}
