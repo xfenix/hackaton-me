@@ -26,6 +26,13 @@ export const FormWrapper = styled.form`
     padding: 18px ${TYPICAL_PADDING}px;
     box-sizing: border-box;
     outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover,
+    &:focus {
+      border-color: ${settings.COLOR_BLACK};
+      box-shadow: ${settings.COLOR_BLACK} 0px 0px 0px 1px inset;
+    }
   }
 `;
 export const FormRow = styled.div``;
