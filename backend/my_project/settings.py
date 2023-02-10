@@ -40,10 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'cashapp',
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -137,3 +139,5 @@ CURRENCY: str = envparse('CURRENCY', 'RUB', cast=str)
 
 BACKGROUND_CHOICES: tuple[str, ...] = ('orchestra', 'conference', 'museum', 'party2', 'party1')
 LOGO_CHOICES: tuple[str, ...] = ('16tonn', 'ontico', 'satirikon', 'pycon')
+
+CORS_ALLOW_ALL_ORIGINS: bool = True
