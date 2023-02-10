@@ -19,12 +19,16 @@ def send_email(to: str, subject: str, text: str) -> None:
 
 def send_sms(to: str, text: str) -> None:
     try:
+        print(
+            (
+                f'{settings.SMS_PROVIDER_URL}?login={settings.SMS_PROVIDER_LOGIN}&'
+                f'psw={settings.SMS_PROVIDER_PASSWORD}&phones={to}&mes={urllib.parse.quote(text)}'
+            )
+        )
         response: httpx.Response = httpx.get(
-            urllib.parse.quote(
-                (
-                    f'{settings.SMS_PROVIDER_URL}?login={settings.SMS_PROVIDER_LOGIN}&'
-                    f'psw={settings.SMS_PROVIDER_PASSWORD}&phones={to}&mes={text}'
-                )
+            (
+                f'{settings.SMS_PROVIDER_URL}?login={settings.SMS_PROVIDER_LOGIN}&'
+                f'psw={settings.SMS_PROVIDER_PASSWORD}&phones={to}&mes={urllib.parse.quote(text)}'
             )
         )
         response.raise_for_status()
