@@ -1,9 +1,7 @@
 import typing
 
 from django.contrib import admin
-from django.db.models import QuerySet
 from django.http import HttpRequest
-from django.template.response import TemplateResponse
 
 from cashapp import models
 
@@ -56,15 +54,6 @@ class BasicAdmin(admin.ModelAdmin):
             extra_context['show_save_and_continue'] = False
             extra_context['show_save'] = False
         return super().change_view(request, object_id, extra_context=extra_context)
-
-    def delete_selected(self, request: HttpRequest, queryset: QuerySet) -> TemplateResponse | None:
-        """Custom action which deletes the selected objects less then
-        LIMIT_NUMBER_OBJECTS_TO_DELETE."""
-        number_objects: int = queryset.count()
-        if number_objects > settings.LIMIT_NUMBER_OBJECTS_TO_DELETE:
-            messages.error(request, _(f'You cannot delete more than {settings.LIMIT_NUMBER_OBJECTS_TO_DELETE} item(s)'))
-            return None
-        return delete_selected_(self, request, queryset)  # type: ignore
 
     def has_module_permission(self, request: HttpRequest) -> bool:
         """Hide model class in dashboard."""

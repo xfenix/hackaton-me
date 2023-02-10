@@ -197,8 +197,17 @@ export const CheckoutScreen = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
-    });
+      body: JSON.stringify({
+        qr_alias: alias,
+        ticket_count: formData.amount,
+        email: formData.email,
+        phone: formData.phone,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        window.location.href = data.redirect_to;
+      });
   };
   React.useEffect(() => {
     // fetch data from server via fetch api
@@ -219,8 +228,6 @@ export const CheckoutScreen = () => {
       <EventDescription>{serverState.description}</EventDescription>
       <FormWrapper action="" onSubmit={handleSubmit(onSubmit)}>
         <FormTicketsCountRow>
-          <input type="hidden" name="qr_alias" value={alias} />
-          <input type="hidden" name="ticket_count" value={watch("amount")} />
           <span className="small-text">Количество билетов:</span>
           <div className="ticket-selector">
             <div className="radio-wrapper">
