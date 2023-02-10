@@ -78,13 +78,30 @@ WSGI_APPLICATION = 'my_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'raiff2023-1',
+            'USER': 'raiff2023-1',
+            'HOST': 'https://rc1b-eyos84hkn45bnqei.mdb.yandexcloud.net',
+            'PORT': '6432',
+        }
+    }
+
+# psql "host=rc1b-eyos84hkn45bnqei.mdb.yandexcloud.net \
+#       port=6432 \
+#       sslmode=verify-full \
+#       dbname=raiff2023-1 \
+#       user=raiff2023-1 \
+#       target_session_attrs=read-write"
 
 
 # Password validation
