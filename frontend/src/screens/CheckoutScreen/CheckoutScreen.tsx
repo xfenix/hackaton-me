@@ -199,7 +199,8 @@ export const CheckoutScreen = () => {
     logo: "",
     background: "",
   });
-  let { alias } = useParams();
+  const { alias } = useParams();
+  const calcTotalSumm = () => serverState.price * Number(watch("amount"));
   const {
     register,
     handleSubmit,
@@ -325,7 +326,17 @@ export const CheckoutScreen = () => {
                 />
               </label>
             </FormRow>
-            <SubmitButton type="submit">
+            <SubmitButton
+              type="submit"
+              disabled={
+                calcTotalSumm() > settings.MAXIMUM_PAYMENT_AMOUNT ? true : false
+              }
+              title={
+                calcTotalSumm() > settings.MAXIMUM_PAYMENT_AMOUNT
+                  ? `Извините, через SPB можно заплатить не более чем ${settings.MAXIMUM_PAYMENT_AMOUNT} рублей`
+                  : ""
+              }
+            >
               <div className="title-wrap">
                 <svg
                   width="24"
@@ -341,9 +352,7 @@ export const CheckoutScreen = () => {
                 </svg>
                 <span>Оплатить</span>
               </div>
-              <strong>
-                {formatPrice(serverState.price * Number(watch("amount")))} ₽
-              </strong>
+              <strong>{formatPrice(calcTotalSumm())} ₽</strong>
             </SubmitButton>
           </FormWrapper>
         </>
