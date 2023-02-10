@@ -134,3 +134,6 @@ QR_CODE_BOX_SIZE: int = envparse("QR_CODE_BOX_SIZE", default=40, cast=int)
 QR_TYPE: str = envparse('QR_CODE_TYPE', 'QRDynamic', cast=str)
 CHECKOUT_INFIX: str = envparse('CHECKOUT_INFIX', 'checkout', cast=str)
 CURRENCY: str = envparse('CURRENCY', 'RUB', cast=str)
+
+BACKGROUND_CHOICES: tuple[str, ...] = ('orchestra', 'conference', 'museum', 'party2', 'party1')
+LOGO_CHOICES: tuple[str, ...] = ('16tonn', 'ontico', 'satirikon', 'pycon')
