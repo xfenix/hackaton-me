@@ -14,6 +14,10 @@ class OrganizationAdmin(admin.ModelAdmin):
         'description',
         'merchant_id',
     )
+    list_display_links: tuple = (
+        'name',
+        'description',
+    )
 
 
 @admin.register(models.Event)
@@ -28,7 +32,10 @@ class EventAdmin(admin.ModelAdmin):
         'event_date',
         'organization',
     )
-    list_display_links: tuple = ('name',)
+    list_display_links: tuple = (
+        'name',
+        'description',
+    )
 
 
 @admin.register(models.EventQRCode)
@@ -45,7 +52,10 @@ class EventQRCodeAdmin(admin.ModelAdmin):
         'price',
         'event',
     )
-    list_display_links: tuple = ('alias',)
+    list_display_links: tuple = (
+        'alias',
+        'description',
+    )
 
 
 @admin.register(models.Order)
