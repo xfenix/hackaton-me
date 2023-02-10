@@ -12,7 +12,6 @@ from django.http import (
     HttpResponseServerError,
     JsonResponse,
 )
-from django.shortcuts import redirect
 from django.utils.decorators import classonlymethod, method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
@@ -133,7 +132,7 @@ class Pdf417CodeView(View):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class RaifPaymentView(View):
+class SView(View):
     def post(
         self, request: HttpRequest
     ) -> JsonResponse | HttpResponseNotFound | HttpResponseBadRequest | HttpResponseServerError:
@@ -152,7 +151,6 @@ class RaifPaymentView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class FinishOrderView(View):
-
     @staticmethod
     def _mask_email(email: str) -> str:
         email_parts: list[str] = email.split('@')
