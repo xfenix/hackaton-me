@@ -1,10 +1,15 @@
 import datetime
+import re
 
 import pydantic
 
 
+RE_PHONE_CLEANUP: re.Pattern = re.compile(r'[^0-9]')
+RE_EMAIL_VALIDTION: re.Pattern = re.compile(r'[^@]+@[^@]+\.[^@]+')
+
+
 class IncomingOrder(pydantic.BaseModel):
-    email: pydantic.EmailStr | None = ''
+    email: str | None = ''
     phone: str | None = ''
     ticket_count: int
     qr_alias: str
@@ -12,8 +17,11 @@ class IncomingOrder(pydantic.BaseModel):
     @pydantic.root_validator()
     def validate(cls, values: dict[str, str | None]):
         if values.get('phone'):
-            values['phone'] = values['phone'].strip()
-        if not values.get("email") and not values.get("phone", "").strip():
+            values['phone'] = RE_PHONE_CLEANUP.sub('', values['phone'])
+        if values.get('email'):
+            if not RE_EMAIL_VALIDTION.match(values['email']):
+                raise ValueError("email is not valid")
+        if not values.get("email") and not values['phone']:
             raise ValueError("email or phone must be specified")
         return values
 

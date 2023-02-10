@@ -129,6 +129,7 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+APP_TITLE: str = envparse('APP_TITLE', 'Self-service Checkout')
 APP_URL_BASE: str = envparse('APP_URL', 'https://self-service-checkout-events.5723.raiff2023.codenrock.com').rstrip("/")
 REDIRECT_URL: str = envparse('PAYMENT_REDIRECT_URL', 'order', cast=str).strip('/')
 QR_GENERATION_URL: str = envparse('RAIFFEISEN_SBP_URL', 'https://pay-test.raif.ru/api/sbp/v2/qrs', cast=str).rstrip("/")

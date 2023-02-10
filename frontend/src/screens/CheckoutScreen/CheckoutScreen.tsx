@@ -9,6 +9,7 @@ import { Spinner } from "../../components";
 
 const TYPICAL_PADDING = 20;
 const RADIO_VALUES = [1, 2, 3, 4, 5];
+const MANUAL_START_TICKETS_COUNT = RADIO_VALUES.slice(-1)[0] + 1;
 export const FormWrapper = styled.form`
   margin-top: 32px;
 
@@ -107,7 +108,7 @@ export const FormTicketsCountRow = styled.div`
   }
 `;
 export const SubmitButton = styled.button`
-  margin-top: 32px;
+  margin-top: 42px;
   background: ${settings.COLOR_BRAND};
   border-radius: 8px;
   padding: 18px ${TYPICAL_PADDING}px;
@@ -158,6 +159,10 @@ export const TicketRadio = styled.label<{ checked: boolean }>`
   cursor: pointer;
   transition: background-color 0.2s ease;
   ${(props) => props.checked && `background: ${settings.COLOR_BRAND};`}
+
+  & + & {
+    margin-left: 3px;
+  }
 
   &:hover {
     background: ${settings.COLOR_BRAND};
@@ -281,14 +286,14 @@ export const CheckoutScreen = () => {
                   type="number"
                   style={{
                     border: `1px solid ${
-                      Number(watch("amount")) > 6
+                      Number(watch("amount")) >= MANUAL_START_TICKETS_COUNT
                         ? settings.COLOR_BRAND
                         : settings.COLOR_VERY_LIGHT_GRAY
                     }`,
                   }}
-                  min={7}
+                  min={1}
                   max={30}
-                  placeholder="7"
+                  placeholder={MANUAL_START_TICKETS_COUNT.toString()}
                   onChange={(eventBody) => {
                     setValue("amount", eventBody.target.value);
                   }}

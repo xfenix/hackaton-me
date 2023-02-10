@@ -62,7 +62,9 @@ class MakeOrderView(AsyncView):
         try:
             decoded_json: dict[str, str | int] = json.loads(request.body.decode('utf-8'))
             incoming_order: pydantic_models.IncomingOrder = pydantic_models.IncomingOrder(**decoded_json)
-        except pydantic.ValidationError:
+        except pydantic.ValidationError as exc:
+            print(exc)
+            print(decoded_json)
             return HttpResponseBadRequest("Please specify a email or phone, ticket count & qr code alias")
 
         event_qr_code: models.EventQRCode | None = await models.EventQRCode.objects.filter(
