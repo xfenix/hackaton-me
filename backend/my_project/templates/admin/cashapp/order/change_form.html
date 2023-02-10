@@ -1,0 +1,10 @@
+{% extends 'admin/change_form.html' %}
+{% load i18n admin_urls %}
+
+
+{% block object-tools-items %}
+<li class="toolbar-left-button">
+    <a href="https://self-service-checkout-events.5723.raiff2023.codenrock.com/order/{{ original.uuid }}/" class="import-dialog-show chb-onpage-action-button" target="blank">{% trans "Show order page" %}</a>
+</li>
+{{ block.super }}
+{% endblock %}

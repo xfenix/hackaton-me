@@ -17,17 +17,12 @@ class RaifSBPClient:
             redirectUrl=redirect_url,
         )
 
-        if settings.DEBUG:
-            return pydantic_models.SBPQRCode(
-                **{'qrId': 'mock-id', 'qrStatus': 'NEW', 'payload': 'https://raiffeisen.ru'}
-            )
-
         async with httpx.AsyncClient() as client:
             try:
-                result: httpx.Response = await client.post(settings.QR_GENERATION_URL, data=qr_code_request.json())
+                result: httpx.Response = await client.post(settings.QR_GENERATION_URL, json=qr_code_request.dict())
                 result.raise_for_status()
             except httpx.HTTPError as exc:
-                print(f"Error while requesting {exc.request.url!r}.")
+                print(f"Error while requesting {exc} {result}.")
                 return None
 
             return pydantic_models.SBPQRCode(**result.json())

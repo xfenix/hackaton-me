@@ -30,8 +30,12 @@ export const FormWrapper = styled.form`
 
     &:hover,
     &:focus {
-      border-color: ${settings.COLOR_BLACK};
-      box-shadow: ${settings.COLOR_BLACK} 0px 0px 0px 1px inset;
+      border-color: ${settings.COLOR_BLACK} !important;
+      box-shadow: ${settings.COLOR_BLACK} 0px 0px 0px 1px inset !important;
+    }
+
+    &[data-error="true"] {
+      border: 1px solid ${settings.COLOR_RED};
     }
   }
 `;
@@ -173,6 +177,7 @@ type FormValues = {
   email: string;
   phone: string;
 };
+
 export const CheckoutScreen = () => {
   const [serverState, setServerData] = React.useState<{
     name: string;
@@ -287,6 +292,7 @@ export const CheckoutScreen = () => {
           <label>
             <span>Email:</span>
             <input
+              data-error={errors.email ? "true" : "false"}
               type="email"
               placeholder="Ваш email"
               {...register("email")}
@@ -300,6 +306,7 @@ export const CheckoutScreen = () => {
           <label>
             <span>Телефон:</span>
             <input
+              data-error={errors.phone ? "true" : "false"}
               type="tel"
               placeholder="Ваш телефон"
               {...register("phone")}
