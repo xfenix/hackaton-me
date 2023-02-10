@@ -62,7 +62,9 @@ class MakeOrderView(AsyncView):
         try:
             decoded_json: dict[str, str | int] = json.loads(request.body.decode('utf-8'))
             incoming_order: pydantic_models.IncomingOrder = pydantic_models.IncomingOrder(**decoded_json)
-        except pydantic.ValidationError:
+        except pydantic.ValidationError as exc:
+            print(exc)
+            print(decoded_json)
             return HttpResponseBadRequest("Please specify a email or phone, ticket count & qr code alias")
 
         event_qr_code: models.EventQRCode | None = await models.EventQRCode.objects.filter(
@@ -125,10 +127,19 @@ class Pdf417CodeView(View):
         if not order:
             return HttpResponseNotFound('Order not found')
         ticket_number: int = request.GET.get('ticket-number', 0)
+        should_download: bool = request.GET.get('download', False) == "1"
         if not ticket_number:
             return HttpResponseBadRequest('Ticket number not specified')
         new_qr: str = barcodes.PDF417Code()(uuid, ticket_number)
-        return HttpResponse(new_qr, headers={'Content-Type': 'image/svg+xml'})
+        return HttpResponse(
+            new_qr,
+            headers={
+                'Conten-Type': 'application/octet-stream',
+                'Content-Disposition': f'attachment; filename="barcode-{uuid}-{ticket_number}.svg"',
+            }
+            if should_download
+            else {'Content-Type': 'image/svg+xml'},
+        )
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -175,5 +186,6 @@ class FinishOrderView(View):
                 "status": order.status,
                 "phone": self._mask_phone(str(order.phone)) if order.phone else None,
                 "email": self._mask_email(str(order.email)) if order.email else None,
+                "tickets_count": order.tickets_count,
             }
         )

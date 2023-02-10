@@ -78,13 +78,30 @@ WSGI_APPLICATION = 'my_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'raiff2023-1',
+            'USER': 'raiff2023-1',
+            'HOST': 'https://rc1b-eyos84hkn45bnqei.mdb.yandexcloud.net',
+            'PORT': '6432',
+        }
+    }
+
+# psql "host=rc1b-eyos84hkn45bnqei.mdb.yandexcloud.net \
+#       port=6432 \
+#       sslmode=verify-full \
+#       dbname=raiff2023-1 \
+#       user=raiff2023-1 \
+#       target_session_attrs=read-write"
 
 
 # Password validation
@@ -129,6 +146,7 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+APP_TITLE: str = envparse('APP_TITLE', 'Self-service Checkout')
 APP_URL_BASE: str = envparse('APP_URL', 'https://self-service-checkout-events.5723.raiff2023.codenrock.com').rstrip("/")
 REDIRECT_URL: str = envparse('PAYMENT_REDIRECT_URL', 'order', cast=str).strip('/')
 QR_GENERATION_URL: str = envparse('RAIFFEISEN_SBP_URL', 'https://pay-test.raif.ru/api/sbp/v2/qrs', cast=str).rstrip("/")
@@ -142,5 +160,36 @@ LOGO_CHOICES: tuple[str, ...] = ('16tonn', 'ontico', 'satirikon', 'pycon')
 
 CORS_ALLOW_ALL_ORIGINS: bool = True
 
-SMS_LOGIN: str = envparse('SMS_LOGIN', 'xfenix', cast=str)
-SMS_PASSWORD: str = envparse('SMS_PASSWORD', 'GachiEtoHorosho123', cast=str)
+
+# Template messages sent out to users
+SUCCESS_EMAIL_SUBJECT: str = envparse('SUCCESS_EMAIL_SUBJECT', "Ваши билеты на $event_name оплачены!", cast=str)
+SUCCESS_EMAIL_TEXT: str = envparse(
+    'SUCCESS_EMAIL_TEXT', "Ваши билеты на $event_name оплачены! Посмотреть их можно здесь: $link", cast=str
+)
+SUCCESS_SMS_TEXT: str = envparse(
+    'SUCCESS_SMS_TEXT', "Vashi bilety na $event_name oplacheny! Posmotret' ih mozhno zdes': $link", cast=str
+)
+
+DECLINED_EMAIL_SUBJECT: str = envparse(
+    'DECLINED_EMAIL_SUBJECT',
+    "К сожалению оплата билетов на мероприятие $event_name не получилась.",
+    cast=str,
+)
+DECLINED_EMAIL_TEXT: str = envparse(
+    'DECLINED_EMAIL_TEXT',
+    "К сожалению оплата билетов на мероприятие $event_name не получилась. Попробуйте ещё раз.",
+    cast=str,
+)
+DECLINED_SMS_TEXT: str = envparse(
+    'DECLINED_SMS_TEXT',
+    "K sozhaleniju oplata biletov na meroprijatie $event_name ne poluchilas'. Poprobujte eshhjo raz.",
+    cast=str,
+)
+
+# Private info that should be supplied from secure source
+# https://smsc.ru/sys/send.php?login=xfenix&psw=GachiEtoHorosho123@&phones=79055310145&mes=Privet
+SMS_PROVIDER_URL: str = envparse('SMS_PROVIDER_URL', 'https://smsc.ru/sys/send.php', cast=str)
+SMS_PROVIDER_LOGIN: str = envparse('SMS_LOGIN', 'xfenix', cast=str)
+SMS_PROVIDER_PASSWORD: str = envparse('SMS_PASSWORD', 'GachiEtoHorosho123@', cast=str)
+
+NO_REPLY_EMAIL: str = envparse('EMAIL_ADDRESS_FROM_NO_REPLY', f'no-reply@{APP_URL_BASE}', cast=str)
