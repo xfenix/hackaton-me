@@ -83,7 +83,7 @@ class MakeOrderView(AsyncView):
 
         order: models.Order = await update_order_from_qr(new_order, payment_qr_code)
 
-        return redirect(order.qr_url)
+        return JsonResponse(dict(redirect_to=order.qr_url))
 
 
 @method_decorator(csrf_exempt, name='dispatch')

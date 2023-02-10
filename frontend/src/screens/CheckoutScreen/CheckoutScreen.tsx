@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import React from "react";
 
 const TYPICAL_PADDING = 20;
-const RADIO_VALUES = [1, 2, 3, 4, 5, 6];
+const RADIO_VALUES = [1, 2, 3, 4, 5];
 export const FormWrapper = styled.form`
   margin-top: 32px;
 
@@ -66,16 +66,39 @@ export const FormTicketsCountRow = styled.div`
     margin-bottom: 8px;
   }
 
-  & > div {
+  & > .ticket-selector {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  & .radio-wrapper {
+    display: flex;
   }
 
   & input[type="number"] {
-    max-width: 120px;
+    max-width: 70px;
     display: block;
-    margin-left: 30px;
+  }
+
+  @media (max-width: 500px) {
+    & input[type="number"] {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 400px) {
+    & label:nth-child(5) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 360px) {
+    & label:nth-child(4) {
+      display: none;
+    }
   }
 `;
 export const SubmitButton = styled.button`
@@ -85,16 +108,20 @@ export const SubmitButton = styled.button`
   padding: 18px ${TYPICAL_PADDING}px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   border: 1px solid ${settings.COLOR_VERY_LIGHT_GRAY};
   transition: background-color 0.4s ease;
   width: 100%;
   box-sizing: border-box;
   cursor: pointer;
 
-  & > span {
-    flex-grow: 3;
-    text-align: left;
-    margin-left: 12px;
+  & > .title-wrap {
+    display: flex;
+    align-items: center;
+
+    & > span {
+      margin-left: 12px;
+    }
   }
 
   &:active {
@@ -105,12 +132,19 @@ export const SubmitButton = styled.button`
   &:hover {
     background: #fed500;
   }
+
+  @media (max-width: 400px) {
+    & {
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
 `;
 export const TicketRadio = styled.label<{ checked: boolean }>`
   font-size: 26px;
   line-height: 32px;
-  width: 48px;
-  height: 48px;
+  min-width: 44px;
+  min-height: 44px;
   font-weight: normal;
   border-radius: 100% !important;
   display: flex;
@@ -163,8 +197,17 @@ export const CheckoutScreen = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
-    });
+      body: JSON.stringify({
+        qr_alias: alias,
+        ticket_count: formData.amount,
+        email: formData.email,
+        phone: formData.phone,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        window.location.href = data.redirect_to;
+      });
   };
   React.useEffect(() => {
     // fetch data from server via fetch api
@@ -185,19 +228,23 @@ export const CheckoutScreen = () => {
       <EventDescription>{serverState.description}</EventDescription>
       <FormWrapper action="" onSubmit={handleSubmit(onSubmit)}>
         <FormTicketsCountRow>
-          <input type="hidden" name="qr_alias" value={alias} />
-          <input type="hidden" name="ticket_count" value={watch("amount")} />
           <span className="small-text">Количество билетов:</span>
-          <div>
-            {RADIO_VALUES.map((oneValue) => (
-              <TicketRadio
-                key={oneValue}
-                checked={watch("amount") === oneValue.toString()}
-              >
-                <span>{oneValue}</span>
-                <input type="radio" value={oneValue} {...register("amount")} />
-              </TicketRadio>
-            ))}
+          <div className="ticket-selector">
+            <div className="radio-wrapper">
+              {RADIO_VALUES.map((oneValue) => (
+                <TicketRadio
+                  key={oneValue}
+                  checked={watch("amount") === oneValue.toString()}
+                >
+                  <span>{oneValue}</span>
+                  <input
+                    type="radio"
+                    value={oneValue}
+                    {...register("amount")}
+                  />
+                </TicketRadio>
+              ))}
+            </div>
             <input
               type="number"
               style={{
@@ -240,19 +287,21 @@ export const CheckoutScreen = () => {
           </label>
         </FormRow>
         <SubmitButton type="submit">
-          <svg
-            width="24"
-            height="20"
-            viewBox="0 0 24 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M16.8 10.8H19.2V8.4H16.8V10.8ZM15.6 12C14.28 12 13.2 10.92 13.2 9.6C13.2 8.28 14.28 7.2 15.6 7.2H21.6V12H15.6ZM2.4 16.8V2.4H19.2V4.8H15.6C12.948 4.8 10.8 6.948 10.8 9.6C10.8 12.252 12.948 14.4 15.6 14.4H19.2V16.8H2.4ZM1.2 19.2H20.4C21.06 19.2 21.6 18.66 21.6 18V16.8C21.6 15.636 21.012 14.868 19.992 14.556V14.4H22.8C23.46 14.4 24 13.86 24 13.2V6C24 5.34 23.46 4.8 22.8 4.8H19.992V4.644C21.012 4.332 21.6 3.564 21.6 2.4V1.2C21.6 0.54 21.06 0 20.4 0H1.2C0.54 0 0 0.54 0 1.2V18C0 18.66 0.54 19.2 1.2 19.2Z"
-              fill="#2B2D33"
-            />
-          </svg>
-          <span>Оплатить</span>
+          <div className="title-wrap">
+            <svg
+              width="24"
+              height="20"
+              viewBox="0 0 24 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16.8 10.8H19.2V8.4H16.8V10.8ZM15.6 12C14.28 12 13.2 10.92 13.2 9.6C13.2 8.28 14.28 7.2 15.6 7.2H21.6V12H15.6ZM2.4 16.8V2.4H19.2V4.8H15.6C12.948 4.8 10.8 6.948 10.8 9.6C10.8 12.252 12.948 14.4 15.6 14.4H19.2V16.8H2.4ZM1.2 19.2H20.4C21.06 19.2 21.6 18.66 21.6 18V16.8C21.6 15.636 21.012 14.868 19.992 14.556V14.4H22.8C23.46 14.4 24 13.86 24 13.2V6C24 5.34 23.46 4.8 22.8 4.8H19.992V4.644C21.012 4.332 21.6 3.564 21.6 2.4V1.2C21.6 0.54 21.06 0 20.4 0H1.2C0.54 0 0 0.54 0 1.2V18C0 18.66 0.54 19.2 1.2 19.2Z"
+                fill="#2B2D33"
+              />
+            </svg>
+            <span>Оплатить</span>
+          </div>
           <strong>
             {formatPrice(serverState.price * Number(watch("amount")))} ₽
           </strong>
