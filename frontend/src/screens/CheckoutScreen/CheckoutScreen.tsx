@@ -148,7 +148,7 @@ export const CheckoutScreen = () => {
     setValue,
   } = useForm({
     defaultValues: {
-      amount: 1,
+      amount: "1",
       email: "",
       phone: "",
     },
@@ -172,13 +172,12 @@ export const CheckoutScreen = () => {
           <span className="small-text">Количество билетов:</span>
           <div>
             {RADIO_VALUES.map((oneValue) => (
-              <TicketRadio key={oneValue} checked={watch("amount") == oneValue}>
+              <TicketRadio
+                key={oneValue}
+                checked={watch("amount") === oneValue.toString()}
+              >
                 <span>{oneValue}</span>
-                <input
-                  type="radio"
-                  value={oneValue}
-                  {...register("amount", { valueAsNumber: true })}
-                />
+                <input type="radio" value={oneValue} {...register("amount")} />
               </TicketRadio>
             ))}
             <input
@@ -187,7 +186,7 @@ export const CheckoutScreen = () => {
               max={30}
               placeholder="8"
               onChange={(eventBody) => {
-                setValue("amount", Number(eventBody.target.value));
+                setValue("amount", eventBody.target.value);
               }}
             />
           </div>
@@ -229,7 +228,9 @@ export const CheckoutScreen = () => {
             />
           </svg>
           <span>Оплатить</span>
-          <strong>{formatPrice(serverState.price * watch("amount"))} ₽</strong>
+          <strong>
+            {formatPrice(serverState.price * Number(watch("amount")))} ₽
+          </strong>
         </SubmitButton>
       </FormWrapper>
     </MainLayout>
