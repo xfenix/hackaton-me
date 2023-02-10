@@ -96,7 +96,7 @@ export const SubmitButton = styled.button`
     background: #fed500;
   }
 `;
-export const TicketRadio = styled.label`
+export const TicketRadio = styled.label<{ checked: boolean }>`
   font-size: 26px;
   line-height: 32px;
   width: 48px;
@@ -108,6 +108,7 @@ export const TicketRadio = styled.label`
   align-items: center;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  ${(props) => props.checked && `background: ${settings.COLOR_BRAND};`}
 
   &:hover {
     background: ${settings.COLOR_BRAND};
@@ -144,7 +145,7 @@ export const CheckoutScreen = () => {
     handleSubmit,
     watch,
     formState: { errors },
-    getValues,
+    setValue,
   } = useForm({
     defaultValues: {
       amount: 1,
@@ -171,9 +172,13 @@ export const CheckoutScreen = () => {
           <span className="small-text">Количество билетов:</span>
           <div>
             {RADIO_VALUES.map((oneValue) => (
-              <TicketRadio key={oneValue}>
+              <TicketRadio key={oneValue} checked={watch("amount") == oneValue}>
                 <span>{oneValue}</span>
-                <input type="radio" value={oneValue} {...register("amount")} />
+                <input
+                  type="radio"
+                  value={oneValue}
+                  {...register("amount", { valueAsNumber: true })}
+                />
               </TicketRadio>
             ))}
             <input
@@ -181,7 +186,9 @@ export const CheckoutScreen = () => {
               min={7}
               max={30}
               placeholder="8"
-              {...register("amount")}
+              onChange={(eventBody) => {
+                setValue("amount", Number(eventBody.target.value));
+              }}
             />
           </div>
         </FormTicketsCountRow>

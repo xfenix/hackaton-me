@@ -133,3 +133,4 @@ QR_GENERATION_URL: str = envparse('RAIFFEISEN_SBP_URL', 'https://pay-test.raif.r
 QR_CODE_BOX_SIZE: int = envparse("QR_CODE_BOX_SIZE", default=40, cast=int)
 QR_TYPE: str = envparse('QR_CODE_TYPE', 'QRDynamic', cast=str)
 CHECKOUT_INFIX: str = envparse('CHECKOUT_INFIX', 'checkout', cast=str)
+CURRENCY: str = envparse('CURRENCY', 'RUB', cast=str)

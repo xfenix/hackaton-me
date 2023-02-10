@@ -48,15 +48,15 @@ class EventQRCode(DateHistoryModel):
 
 
 class Order(DateHistoryModel):
-    email: models.TextField = models.TextField(verbose_name=_("Customer email"), default='')
-    phone: models.TextField = models.TextField(verbose_name=_("Customer phone"), default='')
+    email: models.TextField = models.TextField(verbose_name=_("Customer email"), blank=True, default='')
+    phone: models.TextField = models.TextField(verbose_name=_("Customer phone"), blank=True, default='')
     tickets_count: models.TextField = models.TextField(verbose_name=_("Ticket count"))
-    merchant_reply: models.TextField = models.TextField(verbose_name=_("Merchant reply"), default='')
-    status: models.TextField = models.TextField(verbose_name=_("Order status"), default='')
+    merchant_reply: models.TextField = models.TextField(verbose_name=_("Merchant reply"), blank=True, default='')
+    status: models.TextField = models.TextField(verbose_name=_("Order status"), blank=True, default='')
     uuid: models.UUIDField = models.UUIDField(default=uuid.uuid1, editable=False)
-    qr_id: models.TextField = models.TextField(verbose_name=_("QR ID"), default='')
-    qr_status: models.TextField = models.TextField(verbose_name="QR Status", default='')
-    qr_url: models.TextField = models.TextField(verbose_name=_("QR URL"), default='')
+    qr_id: models.TextField = models.TextField(verbose_name=_("QR ID"), blank=True, default='')
+    qr_status: models.TextField = models.TextField(verbose_name="QR Status", blank=True, default='')
+    qr_url: models.TextField = models.TextField(verbose_name=_("QR URL"), blank=True, default='')
     event: models.ForeignKey = models.ForeignKey('Event', verbose_name=_('Event'), on_delete=models.CASCADE)
 
     def __str__(self) -> str:

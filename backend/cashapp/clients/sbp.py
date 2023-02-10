@@ -6,8 +6,8 @@ from cashapp import pydantic_models
 
 class RaifSBPClient:
     @staticmethod
-    async def send_payment(self, payment: pydantic_models.Payment) -> pydantic_models.SBPQRCode | None:
-        redirect_url: str = f'{settings.URL_BASE}/{payment.order}'
+    async def send_payment(payment: pydantic_models.Payment) -> pydantic_models.SBPQRCode | None:
+        redirect_url: str = f'{settings.APP_URL_BASE}/{payment.order}'
         qr_code_request: pydantic_models.RaifQRCodeRequestPayload = pydantic_models.RaifQRCodeRequestPayload(
             qrType=settings.QR_TYPE,
             amount=payment.amount,
@@ -17,10 +17,13 @@ class RaifSBPClient:
             redirectUrl=redirect_url,
         )
 
+        if settings.DEBUG:
+            return pydantic_models.SBPQRCode(**{'qrId': 'mock-id', 'qrStatus': 'NEW', 'qrUrl': 'https://raiffeisen.ru'})
+
         async with httpx.AsyncClient() as client:
             try:
-                result: httpx.Response = await client.post(settings.QR_GENERATION_URL, qr_code_request.json())
-                response.raise_for_status()
+                result: httpx.Response = await client.post(settings.QR_GENERATION_URL, data=qr_code_request.json())
+                result.raise_for_status()
             except httpx.HTTPError as exc:
                 print(f"Error while requesting {exc.request.url!r}.")
                 return None
