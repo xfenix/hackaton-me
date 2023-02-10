@@ -1,4 +1,5 @@
 import smtplib
+import urllib.parse
 from email.mime.text import MIMEText
 
 import httpx
@@ -19,7 +20,12 @@ def send_email(to: str, subject: str, text: str) -> None:
 def send_sms(to: str, text: str) -> None:
     try:
         response: httpx.Response = httpx.get(
-            f'{settings.SMS_PROVIDER_URL}?login={settings.SMS_PROVIDER_LOGIN}&psw={settings.SMS_PROVIDER_PASSWORD}&phones={to}&mes={text}'
+            urllib.parse.quote(
+                (
+                    f'{settings.SMS_PROVIDER_URL}?login={settings.SMS_PROVIDER_LOGIN}&'
+                    f'psw={settings.SMS_PROVIDER_PASSWORD}&phones={to}&mes={text}'
+                )
+            )
         )
         response.raise_for_status()
     except httpx.HTTPError as exc:
