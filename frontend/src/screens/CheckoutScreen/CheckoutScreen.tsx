@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import React from "react";
 
 const TYPICAL_PADDING = 20;
-const RADIO_VALUES = [1, 2, 3, 4, 5, 6];
+const RADIO_VALUES = [1, 2, 3, 4, 5];
 export const FormWrapper = styled.form`
   margin-top: 32px;
 
@@ -59,16 +59,33 @@ export const FormTicketsCountRow = styled.div`
     margin-bottom: 8px;
   }
 
-  & > div {
+  & > .ticket-selector {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  & .radio-wrapper {
+    display: flex;
   }
 
   & input[type="number"] {
-    max-width: 120px;
+    max-width: 70px;
     display: block;
-    margin-left: 30px;
+  }
+
+  @media (max-width: 500px) {
+    & input[type="number"] {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 400px) {
+    & label:nth-child(5) {
+      display: none;
+    }
   }
 `;
 export const SubmitButton = styled.button`
@@ -102,8 +119,8 @@ export const SubmitButton = styled.button`
 export const TicketRadio = styled.label<{ checked: boolean }>`
   font-size: 26px;
   line-height: 32px;
-  width: 48px;
-  height: 48px;
+  min-width: 44px;
+  min-height: 44px;
   font-weight: normal;
   border-radius: 100% !important;
   display: flex;
@@ -181,16 +198,22 @@ export const CheckoutScreen = () => {
           <input type="hidden" name="qr_alias" value={alias} />
           <input type="hidden" name="ticket_count" value={watch("amount")} />
           <span className="small-text">Количество билетов:</span>
-          <div>
-            {RADIO_VALUES.map((oneValue) => (
-              <TicketRadio
-                key={oneValue}
-                checked={watch("amount") === oneValue.toString()}
-              >
-                <span>{oneValue}</span>
-                <input type="radio" value={oneValue} {...register("amount")} />
-              </TicketRadio>
-            ))}
+          <div className="ticket-selector">
+            <div className="radio-wrapper">
+              {RADIO_VALUES.map((oneValue) => (
+                <TicketRadio
+                  key={oneValue}
+                  checked={watch("amount") === oneValue.toString()}
+                >
+                  <span>{oneValue}</span>
+                  <input
+                    type="radio"
+                    value={oneValue}
+                    {...register("amount")}
+                  />
+                </TicketRadio>
+              ))}
+            </div>
             <input
               type="number"
               style={{
