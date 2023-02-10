@@ -150,10 +150,18 @@ export const CheckoutScreen = () => {
       phone: "",
     },
   });
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = (formData: any) => {
+    fetch(settings.API_MAKE_ORDER, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+  };
   React.useEffect(() => {
     // fetch data from server via fetch api
-    fetch(`${settings.BACK_API_ROOT}/fetch-event-info/${alias}/`)
+    fetch(`${settings.API_FETCH_EVENT}/${alias}/`)
       .then((response) => response.json())
       .then((data) => {
         setServerData(data);
@@ -166,6 +174,8 @@ export const CheckoutScreen = () => {
       <EventDescription>{serverState.description}</EventDescription>
       <FormWrapper action="" onSubmit={handleSubmit(onSubmit)}>
         <FormTicketsCountRow>
+          <input type="hidden" name="qr_alias" value={alias} />
+          <input type="hidden" name="ticket_count" value={watch("amount")} />
           <span className="small-text">Количество билетов:</span>
           <div>
             {RADIO_VALUES.map((oneValue) => (
@@ -187,7 +197,7 @@ export const CheckoutScreen = () => {
               }}
               min={7}
               max={30}
-              placeholder="8"
+              placeholder="7"
               onChange={(eventBody) => {
                 setValue("amount", eventBody.target.value);
               }}
