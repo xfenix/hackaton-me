@@ -132,7 +132,7 @@ class Pdf417CodeView(View):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class SView(View):
+class SBPWebhookView(View):
     def post(
         self, request: HttpRequest
     ) -> JsonResponse | HttpResponseNotFound | HttpResponseBadRequest | HttpResponseServerError:
