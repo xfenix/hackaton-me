@@ -137,11 +137,14 @@ class RaifPaymentView(View):
     def post(
         self, request: HttpRequest
     ) -> JsonResponse | HttpResponseNotFound | HttpResponseBadRequest | HttpResponseServerError:
-        decoded_json: dict[str, str | int] = json.loads(request.body.decode('utf-8'))
-        payment_request: pydantic_models.RaifPaymentRequestPayload = pydantic_models.RaifPaymentRequestPayload(
-            **decoded_json
-        )
+        try:
+            decoded_json: dict[str, str | int] = json.loads(request.body.decode('utf-8'))
+            payment_request: pydantic_models.RaifPaymentRequestPayload = pydantic_models.RaifPaymentRequestPayload(
+                **decoded_json
+            )
+        except pydantic.ValidationError:
+            return HttpResponseBadRequest("Raif payment system request data validation error")
         current_order = models.Order.objects.get(qr_id=payment_request.qrId)
-        current_order.status = models.Order.STATUS_MAP[request.paymentStatus]
+        current_order.status = models.Order.STATUS_MAP[payment_request.paymentStatus]
         current_order.save()
         return HttpResponse(f"Order has been processed with status: {payment_request.paymentStatus}.")
